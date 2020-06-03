@@ -35,8 +35,7 @@ from setuptools import setup, find_packages
 setup(
     name='djangoplicity-newsletters',
     version='0.1.0',
-    packages=find_packages('src'),
-    package_dir={ '': 'src' },
+    packages=find_packages(include=['djangoplicity', 'djangoplicity.*']),
     install_requires=[
         'setuptools',
         'certifi',
@@ -45,7 +44,6 @@ setup(
     ],
     include_package_data=True,
     zip_safe=False,
-    namespace_packages=['djangoplicity'],
 
     # metadata for upload to PyPI
     author='European Southern Observatory',
