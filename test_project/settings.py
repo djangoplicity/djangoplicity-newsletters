@@ -93,7 +93,7 @@ DATABASES = {
         'NAME': 'djangoplicity-newsletters',
         'USER': 'djangoplicity-newsletters',
         'PASSWORD': 'djangoplicity-newsletters',
-        'HOST': 'db',
+        'HOST': 'djangoplicity-newsletters-db',
         'PORT': '5432',
     }
 }
