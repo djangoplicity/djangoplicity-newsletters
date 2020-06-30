@@ -1,2 +1,12 @@
 *.pyc
 *.swp
+
+.idea/
+/*.egg-info/
+.tox/
+.env/
+db/*
+!db/.keep
+htmlcov/*
+!htmlcov/.keep
+.coverage
