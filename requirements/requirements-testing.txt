@@ -1,5 +1,7 @@
 # generate code coverage reports
 coverage
+# linter
+flake8>=3.6.0,<3.7.0
 
 # run the tests against multiple
 # versions of Django and Python
