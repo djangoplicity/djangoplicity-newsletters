@@ -43,6 +43,8 @@ jobs:
           pip install -r requirements.txt  --find-links https://www.djangoplicity.org/repository/packages/
       - name: Run migrations
         run: python manage.py migrate
+      - name: Lint code
+        run: flake8 djangoplicity/ test_project/ tests/
       - name: Run tests
         run: |
           coverage run --source='.' manage.py test
