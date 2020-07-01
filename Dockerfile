@@ -16,12 +16,13 @@ WORKDIR /app
 COPY requirements/ requirements/
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt  --find-links https://www.djangoplicity.org/repository/packages/
+RUN pip install -r requirements.txt --find-links https://www.djangoplicity.org/repository/packages/
 
 COPY scripts/ scripts/
 RUN chmod +x scripts/command-dev.sh
 COPY djangoplicity/ djangoplicity/
 COPY test_project/ test_project/
+COPY tests/ tests/
 COPY setup.py .
 COPY tox.ini .
 COPY .coveragerc .
