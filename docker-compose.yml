@@ -16,14 +16,14 @@ services:
 
   web:
     build: .
-    container_name: djangoplicity-newsletters-web
+    container_name: djangoplicity-newsletters
     command: ["./scripts/command-dev.sh"]
     volumes:
       - ./djangoplicity:/app/djangoplicity
       - ./test_project/:/app/test_project
       - ./htmlcov:/app/htmlcov
       - ./.coveragerc:/app/.coveragerc
-      # - ./tests:/app/tests
+      - ./tests:/app/tests
     ports:
       - "8002:8000"
     depends_on:
