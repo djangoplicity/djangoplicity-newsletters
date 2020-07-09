@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'djangoplicity.newsletters',
     'djangoplicity.reports',
     'test_project',
-    'django_mailman'
+    'django_mailman',
+    'tinymce'
 ]
 
 MIDDLEWARE = [
@@ -163,3 +164,29 @@ DJANGOPLICITY_ADMIN_JS = "djangoplicity/js/admin.js"
 SUBJECT_CATEGORY_CSS = "djangoplicity/css/widgets.css"
 
 NEWSLETTERS_ARCHIVE_ROOT = 'archives/newsletters/'
+
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 360,
+    'width': 1120,
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 20,
+    'selector': 'textarea',
+    'theme': 'modern',
+    'plugins': '''
+        textcolor save link image media preview codesample table
+        code lists fullscreen  insertdatetime  nonbreaking contextmenu
+        directionality searchreplace wordcount visualblocks visualchars
+        code fullscreen autolink lists  charmap print  hr anchor pagebreak
+    ''',
+    'toolbar1': '''
+        fullscreen code | cut copy | searchreplace | alignleft aligncenter alignright alignjustify | formatselect forecolor backcolor | superscript subscript |
+     ''',
+    'toolbar2': '''
+        bold italic underline strikethrough | bullist numlist table hr | indent outdent | undo redo | link unlink anchor image media charmap | nonbreaking |
+    ''',
+    'contextmenu': 'formats | link image',
+    'menubar': False,
+    'statusbar': True,
+    'entity_encoding': 'raw',
+    'convert_urls': False,
+}

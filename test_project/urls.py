@@ -21,4 +21,5 @@ from test_project.admin import admin_site, adminlogs_site
 urlpatterns = [
     url(r'^admin/', include(admin_site.urls), {'extra_context': {'ADMIN_SITE': True}}),
     url(r'^admin/system/', include(adminlogs_site.urls), {'extra_context': {'ADMINLOGS_SITE': True}}),
+    url(r'^tinymce/', include('tinymce.urls')),
 ]
