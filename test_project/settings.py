@@ -190,3 +190,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'entity_encoding': 'raw',
     'convert_urls': False,
 }
+
+ENABLE_ADVANCED_SEARCH = True
+ADV_SEARCH_START_YEAR = 1998
