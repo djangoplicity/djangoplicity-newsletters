@@ -17,7 +17,7 @@ services:
   web:
     build: .
     container_name: djangoplicity-newsletters
-    command: ["./scripts/command-dev.sh"]
+    command: ["./scripts/wait-for-it.sh", "db:5432", "-t", "10", "--", "./scripts/command-dev.sh"]
     volumes:
       - ./djangoplicity:/app/djangoplicity
       - ./test_project/:/app/test_project
