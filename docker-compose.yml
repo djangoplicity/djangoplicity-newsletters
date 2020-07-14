@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: djangoplicity-newsletters
       POSTGRES_PASSWORD: djangoplicity-newsletters
     volumes:
-      - pgdata:/var/lib/pgsql/data
+      - pgdata:/var/lib/postgresql/data
     ports:
       - "50000:5432"
 
