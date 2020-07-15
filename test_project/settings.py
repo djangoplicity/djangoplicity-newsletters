@@ -18,6 +18,7 @@ ugettext = lambda s: s
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TMP_DIR = os.path.join(BASE_DIR, 'tmp')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -193,3 +194,25 @@ TINYMCE_DEFAULT_CONFIG = {
 
 ENABLE_ADVANCED_SEARCH = True
 ADV_SEARCH_START_YEAR = 1998
+
+# CELERY
+CELERY_IMPORTS = [
+    "djangoplicity.archives.contrib.security.tasks",
+    "djangoplicity.celery.tasks",
+]
+# Task result backend
+CELERY_RESULT_BACKEND = "amqp"
+CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672/'
+# Avoid infinite wait times and retries
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'max_retries': 3,
+    'interval_start': 0,
+    'interval_step': 0.2,
+    'interval_max': 0.2,
+}
+# AMQP backend settings - Required for flower to work as intended
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_RESULT_EXPIRES = 3600
+# File to save revoked tasks across workers restart
+CELERY_WORKER_STATE_DB = os.path.join(TMP_DIR, 'celery_states')
+CELERY_BEAT_SCHEDULE_FILENAME = os.path.join(TMP_DIR, 'celerybeat_schedule')

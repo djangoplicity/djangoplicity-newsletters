@@ -18,6 +18,9 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt --find-links https://www.djangoplicity.org/repository/packages/
 
+# Create app required directories
+RUN mkdir -p tmp
+
 COPY scripts/ scripts/
 COPY djangoplicity/ djangoplicity/
 COPY test_project/ test_project/
