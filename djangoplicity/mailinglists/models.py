@@ -167,7 +167,7 @@ class List(models.Model):
                 email = sub.subscriber.email
                 sub.delete()
                 self._unsubscribe(email)
-        except Subscription.DoesNotExist, e:
+        except Subscription.DoesNotExist as e:
             raise e
 
     def _subscribe(self, email):
