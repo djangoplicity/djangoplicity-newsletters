@@ -32,7 +32,7 @@
 from django.apps import apps
 from django.db import models
 from django.db.models.fields import FieldDoesNotExist
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 
 from djangoplicity.actions.plugins import ActionPlugin  # pylint: disable=E0611
 
@@ -56,8 +56,8 @@ class MailChimpAction(ActionPlugin):
                     val._meta.get_field('email')
 
                     # Same method as used in django.core.serializer.python
-                    model_identifier = smart_unicode(val._meta)
-                    pk = smart_unicode(val._get_pk_val(), strings_only=True)
+                    model_identifier = smart_text(val._meta)
+                    pk = smart_text(val._get_pk_val(), strings_only=True)
                     break
                 except FieldDoesNotExist:
                     pass
@@ -163,8 +163,8 @@ class MailChimpUpdateAction(MailChimpAction):
         if 'instance' in kwargs and 'changes' in kwargs:
             instance = kwargs['instance']
             changes = kwargs['changes']
-            model_identifier = smart_unicode(instance._meta)
-            pk = smart_unicode(instance._get_pk_val(), strings_only=True)
+            model_identifier = smart_text(instance._meta)
+            pk = smart_text(instance._get_pk_val(), strings_only=True)
             return ([], {'model_identifier': model_identifier, 'pk': pk, 'changes': changes})
 
         return ([], {'model_identifier': None, 'pk': None, 'changes': {}})

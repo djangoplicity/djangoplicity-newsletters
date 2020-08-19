@@ -47,7 +47,7 @@ from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
 from django.db import models
 from django.db.models.signals import post_save
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 
 from djangoplicity.actions.models import EventAction  # pylint: disable=no-name-in-module
 from djangoplicity.mailinglists.mailman import MailmanList
@@ -69,8 +69,8 @@ def _object_identifier(obj):
     '''
     if isinstance(obj, models.Model):
         return '{}:{}'.format(
-            smart_unicode(obj._meta),
-            smart_unicode(obj.pk, strings_only=True),
+            smart_text(obj._meta),
+            smart_text(obj.pk, strings_only=True),
         )
     else:
         return ''
@@ -422,7 +422,7 @@ class MailChimpList(models.Model):
         merge_fields = {}
         if self.content_type and self.primary_key_field and isinstance(obj, self.content_type.model_class()):
             if changes is None:
-                merge_fields[self.primary_key_field.tag] = "%s:%s" % (smart_unicode(obj._meta), smart_unicode(obj.pk, strings_only=True))
+                merge_fields[self.primary_key_field.tag] = "%s:%s" % (smart_text(obj._meta), smart_text(obj.pk, strings_only=True))
 
             for m in MergeVarMapping.objects.filter(list=self).select_related(
                 'list', 'merge_var'):

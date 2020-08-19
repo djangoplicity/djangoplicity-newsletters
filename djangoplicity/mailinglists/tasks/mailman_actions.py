@@ -33,7 +33,7 @@
 from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 
 from djangoplicity.actions.plugins import ActionPlugin  # pylint: disable=E0611
 
@@ -108,8 +108,8 @@ class MailmanUpdateAction( MailmanAction ):
         if 'instance' in kwargs and 'changes' in kwargs:
             instance = kwargs['instance']
             changes = kwargs['changes']
-            model_identifier = smart_unicode( instance._meta )
-            pk = smart_unicode( instance._get_pk_val(), strings_only=True )
+            model_identifier = smart_text( instance._meta )
+            pk = smart_text( instance._get_pk_val(), strings_only=True )
             return ( [], { 'model_identifier': model_identifier, 'pk': pk, 'changes': changes } )
 
         return ( [], { 'model_identifier': None, 'pk': None, 'changes': {} } )
@@ -146,8 +146,8 @@ class MailmanSyncAction( MailmanAction ):
         pk = None
         for v in kwargs.values():
             if isinstance( v, models.Model ) and hasattr( v, 'get_emails' ) and callable( v.get_emails ):
-                model_identifier = smart_unicode( v._meta )
-                pk = smart_unicode( v._get_pk_val(), strings_only=True )
+                model_identifier = smart_text( v._meta )
+                pk = smart_text( v._get_pk_val(), strings_only=True )
                 break
         return ( [], { 'model_identifier': model_identifier, 'pk': pk } )
 

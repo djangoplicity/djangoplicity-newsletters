@@ -36,7 +36,7 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models, transaction
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 from urllib import urlencode
 from djangoplicity.mailinglists.models import MailChimpList, MailChimpListToken
 
@@ -63,8 +63,8 @@ def _log_webhook_action(logger, ip, user_agent, action, ml, message=''):
 def _object_identifier(obj):
     if isinstance(obj, models.Model):
         return (
-            smart_unicode(obj._meta),
-            smart_unicode(obj._get_pk_val(), strings_only=True),
+            smart_text(obj._meta),
+            smart_text(obj._get_pk_val(), strings_only=True),
         )
     else:
         return (None, None)
