@@ -247,7 +247,7 @@ class Mailer( models.Model ):
             for param in known_params.values():
                 param.delete()
 
-    def __unicode__( self ):
+    def __str__( self ):
         return "%s: %s" % ( self.get_plugincls().name, self.name )
 
     class Meta:
@@ -286,7 +286,7 @@ class MailerParameter( models.Model ):
         elif self.type == 'date':
             return self.value
 
-    def __unicode__( self ):
+    def __str__( self ):
         return u"%s = %s (%s)" % ( self.name, self.value, self.type )
 
     class Meta:
@@ -317,7 +317,7 @@ class Language( models.Model ):
     """
     lang = LanguageField(primary_key=True, verbose_name=_( 'Language' ), max_length=7)
 
-    def __unicode__( self ):
+    def __str__( self ):
         for lang, name in settings.LANGUAGES:
             if lang == self.lang:
                 return name
@@ -373,7 +373,7 @@ class NewsletterType( models.Model ):
         lang = translation.get_language()
         return translation_reverse( 'newsletters_defaultquery', args=[self.slug], lang=lang )
 
-    def __unicode__( self ):
+    def __str__( self ):
         return self.name
 
     class Meta:
@@ -391,7 +391,7 @@ class NewsletterLanguage( models.Model ):
     default_editorial = models.TextField( blank=True )
     default_editorial_text = models.TextField( blank=True )
 
-    def __unicode__( self ):
+    def __str__( self ):
         return '%s - %s' % (self.newsletter_type, self.language.lang)
 
     class Meta:
@@ -828,7 +828,7 @@ class Newsletter( ArchiveModel, TranslationModel ):
 
         return unpublished
 
-    def __unicode__( self ):
+    def __str__( self ):
         return self.subject
 
     class Meta:
@@ -1040,7 +1040,7 @@ class DataSourceSelector( models.Model ):
 
         return models.Q( **d ) if self.filter == 'I' else ~models.Q( **d )
 
-    def __unicode__( self ):
+    def __str__( self ):
         return self.name
 
     class Meta:
@@ -1058,7 +1058,7 @@ class DataSourceOrdering( models.Model ):
     def get_order_by( self ):
         return [x.strip() for x in self.fields.split( ',' ) ]
 
-    def __unicode__( self ):
+    def __str__( self ):
         return self.name
 
     class Meta:
@@ -1081,7 +1081,7 @@ class NewsletterDataSource( models.Model ):
     ordering = models.ForeignKey( DataSourceOrdering, null=True, blank=True )
     limit = models.CharField( max_length=255, blank=True )
 
-    def __unicode__( self ):
+    def __str__( self ):
         return "%s: %s" % ( self.type, self.title )
 
     def _limit_queryset( self, qs ):
@@ -1156,7 +1156,7 @@ class NewsletterFeedDataSource(models.Model):
     fetch_translations = models.BooleanField(default=True, help_text=_(
         'Fetch translated version of the feed if available'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def _limit_data(self, data):

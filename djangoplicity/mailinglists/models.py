@@ -85,7 +85,7 @@ class BadEmailAddress(models.Model):
     email = models.EmailField(unique=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email
 
     class Meta:
@@ -99,7 +99,7 @@ class Subscriber(models.Model):
     '''
     email = models.EmailField(unique=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email
 
     class Meta:
@@ -243,7 +243,7 @@ class List(models.Model):
             for e in unsubscribe:
                 self._unsubscribe(e)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -257,7 +257,7 @@ class Subscription(models.Model):
     subscriber = models.ForeignKey(Subscriber)
     list = models.ForeignKey(List)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s subscribed to %s" % (self.subscriber, self.list)
 
     class Meta:
@@ -795,7 +795,7 @@ class MailChimpList(models.Model):
         if created and not raw:
             webhooks.delay(list_id=instance.list_id)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name if self.name else self.list_id
 
     class Meta:
@@ -837,7 +837,7 @@ class MailChimpMergeVar(models.Model):
     tag = models.CharField(max_length=255, blank=True)
     choices = models.TextField(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (self.list,
             self.name if self.field_type != 'address' else
                 '%s (addr1,addr2,city,state,zip,country)' % self.name)
@@ -855,7 +855,7 @@ class MailChimpGroup(models.Model):
     group_id = models.CharField(db_index=True, max_length=50)
     name = models.CharField(max_length=255)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (self.list, self.name)
 
 
@@ -869,7 +869,7 @@ class MailChimpGrouping(models.Model):
     name = models.CharField(max_length=255)
     option = models.TextField(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (self.name, self.option)
 
     class Meta:
@@ -915,7 +915,7 @@ class GroupMapping(models.Model):
 
         return interests
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s -> %s" % (self.group, self.field)
 
 
@@ -1004,7 +1004,7 @@ class MergeVarMapping(models.Model):
 
         return (self.merge_var.tag, val)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s -> %s' % (self.merge_var, self.field)
 
 
