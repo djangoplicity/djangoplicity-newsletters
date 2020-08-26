@@ -18,6 +18,3 @@ git+https://@github.com/djangoplicity/djangoplicity-contacts@master
 
 # Djangoplicity
 git+https://@github.com/djangoplicity/djangoplicity.git@develop
-
-# Python 2/3 compatibility library
-future
