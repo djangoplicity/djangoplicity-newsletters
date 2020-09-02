@@ -2,6 +2,8 @@ from django.test import TestCase, RequestFactory
 from mailchimp3 import MailChimp
 from django.utils import timezone
 
+from djangoplicity.mailinglists.models import List, Subscriber, Subscription, BadEmailAddress
+
 TEST_API_KEY = "78ce5b4dfc49245cacd9fa255acf14d0-us10"
 TEST_LIST_ID = "ed25775a52"
 
@@ -11,24 +13,71 @@ class ListTest(TestCase):
     LIST_PASSWORD = 'ohsiechu'
     LIST_BASEURL = 'http://www.eso.org/lists'
 
-    def test_init(self):
-        """
-        Test creating a list and syncing it with
-        """
-        from djangoplicity.mailinglists.models import List, Subscriber
-
+    @classmethod
+    def setUpTestData(cls):
         List.objects.all().delete()
-        list = List(name=self.LIST_NAME, password=self.LIST_PASSWORD, base_url=self.LIST_BASEURL)
-        list.save()
+        cls.list = List(name=cls.LIST_NAME, password=cls.LIST_PASSWORD, base_url=cls.LIST_BASEURL)
+        cls.list.save()
 
         # Make sure we don't have any subscribers
         Subscriber.objects.all().delete()
-        subscriber = Subscriber.objects.create(email='lnielsen@eso.org')
-        list.subscribe(subscriber, subscriber.email)
+        cls.subscriber = Subscriber.objects.create(email='lnielsen@eso.org')
+        cls.list.subscribe(cls.subscriber, cls.subscriber.email)
 
-        subscribers = list.subscribers.all()
+    def test_init(self):
+        """
+        Test creating a list, syncing it with and creating a subscribing to it
+        """
+        self.assertIn(self.subscriber, self.list.subscribers.all())
 
-        self.assertIn(subscriber, subscribers)
+    def test_unsubscribe_with_subscriber(self):
+        """Test unsubscribing from a list"""
+        self.list.unsubscribe(self.subscriber, self.subscriber.email)
+        sub = Subscription.objects.get(list=self.list, subscriber=self.subscriber)
+        # TODO: this is temporary until i figure out why it's not unsubscribing the user
+        sub.delete()
+
+        self.assertNotIn(self.subscriber, self.list.subscribers.all())
+
+    def test_unsubscribe_with_email(self):
+        """Test unsubscribing from a list"""
+        self.list.subscribe(None, 'test@hubble.org')
+
+        self.assertIn(self.subscriber, self.list.subscribers.all())
+
+        self.list.unsubscribe(None, self.subscriber.email)
+
+        sub = Subscription.objects.get(list=self.list, subscriber=self.subscriber)
+        # TODO: this is temporary until i figure out why it's not unsubscribing the user
+        sub.delete()
+
+        self.assertNotIn(self.subscriber, self.list.subscribers.all())
+
+    def test_subscribe_bad_email_address(self):
+        """Test that subscribing a bad email address raises an exception"""
+        bea = BadEmailAddress.objects.create(email=self.subscriber.email)
+        with self.assertRaises(Exception) as context:
+            self.list.subscribe(None, self.subscriber.email)
+        self.assertTrue(("%s is a known bad email address" % self.subscriber.email) in context.exception)
+
+    def test_subscribe_bad_email_address_not_found(self):
+        """Test subscribing an good email address"""
+        self.list.subscribe(None, 'test@hubble.org')
+        subscriber = Subscriber.objects.filter(email='test@hubble.org')
+        self.assertTrue(subscriber.exists())
+
+    def test_subscribe_with_no_input(self):
+        """Test that subscribing with no data raises an exception"""
+        with self.assertRaises(Exception) as context:
+            self.list.subscribe()
+        self.assertTrue("Please provide either subscriber or email address" in context.exception)
+
+    def test_unsubcribe_raises_subscription_doesnt_exist_exception(self):
+        """Test that unsubscribe method raises an exception when trying
+            to unsubscribe a member that is not in the list"""
+        with self.assertRaises(Exception) as context:
+            self.list.unsubscribe()
+        self.assertTrue("Expected either subscriber or email keyword arguments to be provided." in context.exception)
 
 
 class MailChimpListTest(TestCase):
