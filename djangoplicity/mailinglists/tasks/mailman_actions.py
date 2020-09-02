@@ -83,7 +83,7 @@ class MailmanSubscribeAction(MailmanAction):
         """
         if email:
             list = self._get_list( conf['list_name'] )
-            list.subscribe( email=email, async=False )
+            list.subscribe( email=email, is_async=False )
             self.get_logger().info("Subscribed %s to mailman list %s" % ( email, list.name ) )
 
 
@@ -96,7 +96,7 @@ class MailmanUnsubscribeAction(MailmanAction):
         """
         if email:
             list = self._get_list( conf['list_name'] )
-            list.unsubscribe( email=email, async=False )
+            list.unsubscribe( email=email, is_async=False )
             self.get_logger().info("Unsubscribed %s to mailman list %s" % ( email, list.name ) )
 
 
@@ -127,10 +127,10 @@ class MailmanUpdateAction( MailmanAction ):
             # from/to email can be empty but not none (empty basically means unsubscribe).
             list = self._get_list( conf['list_name'] )
             if from_email != '':
-                list.unsubscribe( email=from_email, async=False )
+                list.unsubscribe( email=from_email, is_async=False )
                 self.get_logger().info( "Unsubscribed %s to mailman list %s" % ( from_email, list.name ) )
             if to_email != '':
-                list.subscribe( email=to_email, async=False )
+                list.subscribe( email=to_email, is_async=False )
                 self.get_logger().info( "Subscribed %s to mailman list %s" % ( to_email, list.name ) )
 
 

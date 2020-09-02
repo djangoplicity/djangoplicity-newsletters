@@ -128,7 +128,7 @@ class List(models.Model):
         return MailmanList(name=self.name, password=self.password, main_url=self.base_url)
     mailman = property(_get_mailman)
 
-    def subscribe(self, subscriber=None, email=None, async=True):
+    def subscribe(self, subscriber=None, email=None, is_async=True):
         """
         Subscribe a user to this list.
         """
@@ -147,13 +147,13 @@ class List(models.Model):
         sub = Subscription(list=self, subscriber=subscriber)
         sub.save()
 
-        if async:
+        if is_async:
             from djangoplicity.mailinglists.tasks import mailman_send_subscribe
             mailman_send_subscribe.delay(sub.pk)
         else:
             self._subscribe(subscriber.email)
 
-    def unsubscribe(self, subscriber=None, email=None, async=True):
+    def unsubscribe(self, subscriber=None, email=None, is_async=True):
         """
         Unsubscribe a user to this list.
         """
@@ -165,7 +165,7 @@ class List(models.Model):
             else:
                 raise Exception("Expected either subscriber or email keyword arguments to be provided.")
 
-            if async:
+            if is_async:
                 from djangoplicity.mailinglists.tasks import mailman_send_unsubscribe
                 mailman_send_unsubscribe.delay(sub.pk)
             else:
@@ -479,7 +479,7 @@ class MailChimpList(models.Model):
         return None
 
     def subscribe(self, email, merge_fields=None, email_type='html',
-        double_optin=True, send_welcome=False, async=True):
+        double_optin=True, send_welcome=False, is_async=True):
         '''
         Subscribe the provided email address
         '''
@@ -547,7 +547,7 @@ class MailChimpList(models.Model):
         return True
 
     def unsubscribe(self, email, delete_member=False, send_goodbye=True,
-        send_notify=True, async=True):
+        send_notify=True, is_async=True):
         '''
         Unsubscribe email from MailChimp (sets its status to "unsubscribed")
         '''
@@ -584,7 +584,7 @@ class MailChimpList(models.Model):
         return True
 
     def update_profile(self, email, new_email, merge_fields=None,
-        email_type=None, replace_interests=True, async=True):
+        email_type=None, replace_interests=True, is_async=True):
         '''
         Update the profile of an existing member
         '''
