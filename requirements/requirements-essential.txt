@@ -14,7 +14,7 @@ celery==4.3.0
 git+https://@github.com/djangoplicity/djangoplicity-actions@develop
 
 # Djangoplicity
-git+https://@github.com/djangoplicity/djangoplicity.git@upgrade/manual-python3-upgrades
+git+https://@github.com/djangoplicity/djangoplicity.git@release/python3
 
 # Python 2/3 compatibility library
 future
