@@ -48,6 +48,7 @@ The newsletter system consists of the following components:
 # pylint: disable=E0611
 from builtins import str
 from builtins import object
+from future.utils import python_2_unicode_compatible
 import logging
 import requests
 import traceback
@@ -104,6 +105,7 @@ def make_nl_id():
     return str(max_id + 1)
 
 
+@python_2_unicode_compatible
 class Mailer( models.Model ):
     """
     Model for defining mailers. A newsletter type can define several mailers to use
@@ -260,6 +262,7 @@ class Mailer( models.Model ):
 post_save.connect( Mailer.post_save_handler, sender=Mailer )
 
 
+@python_2_unicode_compatible
 class MailerParameter( models.Model ):
     """
     Parameter for a mailer (e.g. mailchimp list id, or list of email addresses).
@@ -313,6 +316,7 @@ class MailerLog( models.Model ):
         ordering = ['-timestamp']
 
 
+@python_2_unicode_compatible
 class Language( models.Model ):
     """
     Available languages for Local newsletters
@@ -329,6 +333,7 @@ class Language( models.Model ):
         ordering = ['lang']
 
 
+@python_2_unicode_compatible
 class NewsletterType( models.Model ):
     """
     Definition of a newsletter type - e.g. ESO Outreach Community Newsletter
@@ -382,6 +387,7 @@ class NewsletterType( models.Model ):
         ordering = ['name']
 
 
+@python_2_unicode_compatible
 class NewsletterLanguage( models.Model ):
     """
     Available languages for Local newsletters
@@ -400,6 +406,7 @@ class NewsletterLanguage( models.Model ):
         ordering = ['language']
 
 
+@python_2_unicode_compatible
 class Newsletter( ArchiveModel, TranslationModel ):
     """
     A definition of a newsletter.
@@ -997,6 +1004,7 @@ class NewsletterContent( models.Model ):
         return ctx
 
 
+@python_2_unicode_compatible
 class DataSourceSelector( models.Model ):
     """
     Data source selector is used for selecting objects when auto-generating
@@ -1049,6 +1057,7 @@ class DataSourceSelector( models.Model ):
         ordering = ['name']
 
 
+@python_2_unicode_compatible
 class DataSourceOrdering( models.Model ):
     """
     Data source ordering is used to order objects in a data source
@@ -1067,6 +1076,7 @@ class DataSourceOrdering( models.Model ):
         ordering = ['name']
 
 
+@python_2_unicode_compatible
 class NewsletterDataSource( models.Model ):
     """
     Data source for a newsletter. A data source is a reference to a
@@ -1143,6 +1153,7 @@ class NewsletterDataSource( models.Model ):
         ordering = ['type__name', 'title']
 
 
+@python_2_unicode_compatible
 class NewsletterFeedDataSource(models.Model):
     '''
     Feed data source for a newsletter. Use to select data from a given

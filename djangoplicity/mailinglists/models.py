@@ -34,6 +34,7 @@ standard_library.install_aliases()
 from builtins import str
 from builtins import zip
 from builtins import range
+from future.utils import python_2_unicode_compatible
 import hashlib
 import logging
 import uuid as uuidmod
@@ -82,7 +83,7 @@ def _object_identifier(obj):
 
 
 # Models
-
+@python_2_unicode_compatible
 class BadEmailAddress(models.Model):
     '''
     Bad email addresses which was found to bounce back emails.
@@ -98,6 +99,7 @@ class BadEmailAddress(models.Model):
         verbose_name_plural = 'bad email addresses'
 
 
+@python_2_unicode_compatible
 class Subscriber(models.Model):
     '''
     Subscriber (i.e an email address) to one or more lists.
@@ -111,6 +113,7 @@ class Subscriber(models.Model):
         ordering = ('email', )
 
 
+@python_2_unicode_compatible
 class List(models.Model):
     """
     Mailman list
@@ -255,6 +258,7 @@ class List(models.Model):
         ordering = ('name',)
 
 
+@python_2_unicode_compatible
 class Subscription(models.Model):
     """
     Relation between subscribers and lists.
@@ -270,6 +274,7 @@ class Subscription(models.Model):
         ordering = ('subscriber__email',)
 
 
+@python_2_unicode_compatible
 class MailChimpList(models.Model):
     '''
     A list already defined in MailChimp.
@@ -824,6 +829,7 @@ MERGEFIELD_DATATYPES = [
 ]
 
 
+@python_2_unicode_compatible
 class MailChimpMergeVar(models.Model):
     '''
     Store information about mailchimp mergefields for each list.
@@ -852,6 +858,7 @@ class MailChimpMergeVar(models.Model):
         verbose_name = 'mailchimp merge field'
 
 
+@python_2_unicode_compatible
 class MailChimpGroup(models.Model):
     '''
     Represent a Mailchimp Interest Category (formerly known as Group)
@@ -864,6 +871,7 @@ class MailChimpGroup(models.Model):
         return '%s: %s' % (self.list, self.name)
 
 
+@python_2_unicode_compatible
 class MailChimpGrouping(models.Model):
     '''
     Represent a Mailchimp Interest (formerly known as Grouping)
@@ -881,6 +889,7 @@ class MailChimpGrouping(models.Model):
         ordering = ['name', 'option']
 
 
+@python_2_unicode_compatible
 class GroupMapping(models.Model):
     '''
     Mapping between a Mailchimp Group and a field.
@@ -924,6 +933,7 @@ class GroupMapping(models.Model):
         return "%s -> %s" % (self.group, self.field)
 
 
+@python_2_unicode_compatible
 class MergeVarMapping(models.Model):
     '''
     Mapping between a Mailchimp Merge Field (formally Merge Var) and a django
