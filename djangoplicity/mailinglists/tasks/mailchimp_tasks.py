@@ -40,7 +40,7 @@ from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models, transaction
 from django.utils.encoding import smart_text
-from urllib import urlencode
+from urllib.parse import urlencode
 from djangoplicity.mailinglists.models import MailChimpList, MailChimpListToken
 
 
