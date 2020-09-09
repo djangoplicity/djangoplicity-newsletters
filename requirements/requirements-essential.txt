@@ -16,9 +16,6 @@ git+https://@github.com/djangoplicity/djangoplicity-actions@develop
 # Django mailman
 git+https://@github.com/jelko/django-mailman@master
 
-# Djangoplicity contacts
-git+https://@github.com/djangoplicity/djangoplicity-contacts@master
-
 # Djangoplicity
 git+https://@github.com/djangoplicity/djangoplicity.git@release/python3
 
