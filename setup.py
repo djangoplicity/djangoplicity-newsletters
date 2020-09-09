@@ -39,7 +39,7 @@ setup(
     install_requires=[
         'setuptools',
         'certifi',
-        'django-mailman @ https://github.com/jelko/django-mailman@master',
+        'django-mailman@git+https://github.com/jelko/django-mailman@master',
         'mailchimp3==3.0.6'
     ],
     dependency_links=[
