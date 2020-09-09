@@ -1,7 +1,7 @@
 Django==1.11.21
 setuptools
 certifi
-django-mailman == 0.4+eso1
+#django-mailman == 0.4+eso1
 mailchimp3 == 3.0.6
 
 # PostgreSQL python client
@@ -12,6 +12,9 @@ celery==4.4.7
 
 # Djangoplicity actions
 git+https://@github.com/djangoplicity/djangoplicity-actions@develop
+
+# Django mailman
+git+https://@github.com/jelko/django-mailman@master
 
 # Djangoplicity
 git+https://@github.com/djangoplicity/djangoplicity.git@release/python3
