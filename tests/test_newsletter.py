@@ -114,7 +114,7 @@ class MailerTestCase(TestCase):
 
     def test_on_scheduled(self):
         a = self.createNewMailerMailChimp()
-        nlt = self.createNewsletterType()
-        nl = self.createNewsletter(nlt)
+        # nlt = self.createNewsletterType()
+        # nl = self.createNewsletter(nlt)
         # a.on_scheduled(nl)
         print MailChimpCampaign.objects.all()
