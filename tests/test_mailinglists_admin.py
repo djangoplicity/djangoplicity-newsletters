@@ -2,7 +2,12 @@ from datetime import datetime
 from django.urls import reverse
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from test_project.settings import NEWSLETTERS_MAILCHIMP_APIKEY
+
+TEST_API_KEY = "78ce5b4dfc49245cacd9fa255acf14d0-us10"
+TEST_LIST_ID = "ed25775a52"
+
 
 class AdminSiteTests(TestCase):
     def setUp(self):
@@ -14,9 +19,6 @@ class AdminSiteTests(TestCase):
         )
         self.client.force_login(self.admin_user)
 
-    # @classmethod
-    # def setUpTestData(cls):
-
     def test_admin_pages_for_models(self):
         """Test that pages for models in admin are properly generated"""
         models = ['bademailaddress', 'subscriber', 'subscription', 'list', 'mailchimplist', 'mailchimplisttoken']
@@ -27,6 +29,7 @@ class AdminSiteTests(TestCase):
             self.assertEqual(res.status_code, 200)
 
     def test_add_list_page(self):
+        """Test that mailchimp list add page contains all inline forms"""
         url = '/admin/mailinglists/mailchimplist/add/'
         res = self.client.get(url)
 
@@ -41,3 +44,24 @@ class AdminSiteTests(TestCase):
         self.assertContains(res, "Mailchimp merge field mappings")
         self.assertContains(res, "Group mappings")
 
+    def test_action_install_webhooks(self):
+        from djangoplicity.mailinglists.models import MailChimpList
+        list = MailChimpList.objects.create(api_key=TEST_API_KEY, list_id=TEST_LIST_ID)
+
+        url = '/admin/mailinglists/mailchimplist/'
+        data = {'action': 'action_install_webhooks', '_selected_action': [list.pk]}
+        res = self.client.post(url, data, follow=True)
+
+        self.assertEquals(res.status_code, 200)
+        self.assertContains(res, "Installing webhooks for lists %s" % list.name)
+
+    def test_action_update_info(self):
+        from djangoplicity.mailinglists.models import MailChimpList
+        list = MailChimpList.objects.create(api_key=TEST_API_KEY, list_id=TEST_LIST_ID)
+
+        url = '/admin/mailinglists/mailchimplist/'
+        data = {'action': 'action_update_info', '_selected_action': [list.pk]}
+        res = self.client.post(url, data, follow=True)
+
+        self.assertEquals(res.status_code, 200)
+        self.assertContains(res, "Updating statistics from lists %s." % list.name)
