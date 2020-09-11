@@ -1,10 +1,19 @@
 from django.test import TestCase
-from djangoplicity.newsletters.models import Mailer, MailerParameter, MailerLog, make_nl_id
+from djangoplicity.newsletters.models import Mailer, MailerParameter, MailerLog, make_nl_id, Newsletter, NewsletterType, MailChimpCampaign, Language
 from djangoplicity.newsletters.mailers import MailChimpMailerPlugin, MailmanMailerPlugin, EmailMailerPlugin
-from test_project.models import SimpleMailer
+from test_project.models import SimpleMailer, SimpleMailChimpMailerPlugin
+from django.conf import settings
 
 class MailerTestCase(TestCase):
 
+
+    def createNewMailerMailChimp(self):
+        Mailer.objects.all().delete()
+        m = Mailer(plugin='test_project.models.SimpleMailer', name='Simple Mailer')
+        m.register_plugin(SimpleMailChimpMailerPlugin)
+        m.save()
+        return m
+    
     def createNewMailer(self):
         Mailer.objects.all().delete()
         m = Mailer(plugin='test_project.models.SimpleMailer', name='Simple Mailer')
@@ -17,6 +26,40 @@ class MailerTestCase(TestCase):
         p = MailerParameter.objects.create(mailer=mailer ,name='test', value='value test')
         p.save()
         return p
+    
+    def createNewsletterType(self):
+        NewsletterType.objects.all().delete()
+        l = self.createLanguage()
+        m = self.createNewMailer()
+        l.save()
+        m.save()
+        print Language.objects.all()
+        n = NewsletterType.objects.create(
+            id=1,
+            name='NewsletterType Test',
+            slug='slug-test',
+            default_from_name='test',
+            default_from_email='test@test.com',
+            # languages=l
+        )
+        # n.save()
+        # n.languages.add(l)
+        return n
+    
+    def createNewsletter(self, newsletterType):
+        Newsletter.objects.all().delete()
+        n = Newsletter.objects.create(
+            id='slug-test-newsletters',
+            type=newsletterType
+        )
+        return n
+    
+    def createLanguage(self):
+        Language.objects.all().delete()
+        l = Language.objects.create(
+            lang = settings.LANGUAGE_CODE
+        )
+        return l
 
     def test_list_mailer(self):
         m = self.createNewMailer()
@@ -68,3 +111,10 @@ class MailerTestCase(TestCase):
     def test_get_id(self):
         a = self.createNewMailer()
         self.assertEquals(make_nl_id(), u'1')
+
+    def test_on_scheduled(self):
+        a = self.createNewMailerMailChimp()
+        nlt = self.createNewsletterType()
+        nl = self.createNewsletter(nlt)
+        a.on_scheduled(nl)
+        print MailChimpCampaign.objects.all()
