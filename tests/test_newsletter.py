@@ -1,5 +1,5 @@
 from django.test import TestCase
-from djangoplicity.newsletters.models import Mailer, MailerParameter, MailerLog
+from djangoplicity.newsletters.models import Mailer, MailerParameter, MailerLog, make_nl_id
 from djangoplicity.newsletters.mailers import MailChimpMailerPlugin, MailmanMailerPlugin, EmailMailerPlugin
 from test_project.models import SimpleMailer
 
@@ -64,3 +64,7 @@ class MailerTestCase(TestCase):
         log = a.get_plugin()
         path = log.get_class_path()
         self.assertEquals(path, SimpleMailer.get_class_path())
+    
+    def test_get_id(self):
+        a = self.createNewMailer()
+        self.assertEquals(make_nl_id(), u'1')
