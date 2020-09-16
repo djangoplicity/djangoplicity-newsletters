@@ -176,6 +176,12 @@ class MailChimpListTest(TestCase):
             self.list.subscribe('admin@hubble.org', None, 'invalid_type')
         self.assertTrue('Invalid email type invalid_type - options are html, text, or mobile.' in context.exception)
 
+    def test_susbcribe_bad_merge_fields(self):
+        with self.assertRaises(Exception) as context:
+            self.list.subscribe('admin@hubble.org', {'invalid': 'invalid'}, 'text')
+        # print context.exception
+        self.assertTrue('Invalid merge field invalid - allowed variables are INTERESTS' in context.exception)
+
     def test_unsubscribe(self):
         email = 'admin@hubble.org'
 
