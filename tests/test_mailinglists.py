@@ -1,8 +1,9 @@
 from django.test import TestCase, RequestFactory
 from mailchimp3 import MailChimp
+from mailchimp3.mailchimpclient import MailChimpError
 from django.utils import timezone
 
-from djangoplicity.mailinglists.models import List, Subscriber, Subscription, BadEmailAddress
+from djangoplicity.mailinglists.models import List, Subscriber, Subscription, BadEmailAddress, MailChimpList
 
 TEST_API_KEY = "78ce5b4dfc49245cacd9fa255acf14d0-us10"
 TEST_LIST_ID = "ed25775a52"
@@ -92,15 +93,16 @@ class MailChimpListTest(TestCase):
     fields have a non-blank value (currently they are all required fields)
     """
 
+    def setUp(self):
+        self.list = self._valid_list()
+
     #
     # Helper methods
     #
     def _valid_list(self):
-        from djangoplicity.mailinglists.models import MailChimpList
         return MailChimpList(api_key=TEST_API_KEY, list_id=TEST_LIST_ID)
 
     def _invalid_list(self):
-        from djangoplicity.mailinglists.models import MailChimpList
         return MailChimpList(api_key="not_valid", list_id="not_valid")
 
     def _fixture_delete(self, objects):
@@ -111,8 +113,7 @@ class MailChimpListTest(TestCase):
                 pass
 
     def _reset(self):
-        from djangoplicity.mailinglists.models import List, Subscriber, Subscription, MailChimpList, MailChimpListToken, \
-            MailChimpSourceList, MailChimpSubscriberExclude
+        from djangoplicity.mailinglists.models import MailChimpListToken, MailChimpSourceList, MailChimpSubscriberExclude
 
         Subscription.objects.all().delete()
         MailChimpListToken.objects.all().delete()
@@ -138,8 +139,6 @@ class MailChimpListTest(TestCase):
         list.delete()
 
     def test_mailchimp_dc(self):
-        from djangoplicity.mailinglists.models import MailChimpList
-
         list = MailChimpList(api_key="5b9aa23a4e53e80db2de92975de8dd5b-us2", list_id="not_valid")
         self.assertEqual(list.mailchimp_dc(), "us2")
 
@@ -161,6 +160,29 @@ class MailChimpListTest(TestCase):
         client = MailChimp(mc_api=TEST_API_KEY, mc_user='USER')
 
         self.assertEqual(client.ping.get()['health_status'], "Everything's Chimpy!")
+
+    def test_subscribe(self):
+        self.assertTrue(self.list.subscribe('admin@hubble.org', None, 'text'))
+
+    def test_susbcribe_bad_email_address(self):
+        email = 'admin@hubble.org'
+        BadEmailAddress.objects.create(email=email)
+        with self.assertRaises(Exception) as context:
+            self.list.subscribe(email)
+        self.assertTrue(('%s is a known bad email address' % email) in context.exception)
+
+    def test_susbcribe_bad_email_type(self):
+        with self.assertRaises(Exception) as context:
+            self.list.subscribe('admin@hubble.org', None, 'invalid_type')
+        self.assertTrue('Invalid email type invalid_type - options are html, text, or mobile.' in context.exception)
+
+    def test_unsubscribe(self):
+        email = 'admin@hubble.org'
+
+        self.list.unsubscribe(email)
+        self.assertTrue(self.list.unsubscribe(email))
+        # to test that the subscribers doesn't exist
+        self.assertTrue(self.list.unsubscribe('another@hubble.org'))
 
 
 class MailChimpListTokenTest(TestCase):
