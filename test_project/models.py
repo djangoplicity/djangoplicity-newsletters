@@ -3,9 +3,8 @@ from djangoplicity.newsletters.mailers import MailmanMailerPlugin, MailChimpMail
 
 class SimpleMailer( MailmanMailerPlugin ):
     name = 'Standard mailer'
-    # action_run_test = ''
 
-    action_parameters = [
+    mailer_parameters = [
             ('name', 'list name', 'str'),
             ( 'password', 'Admin password for list', 'str' ),
             ( 'somenum', 'Some num', 'int' ),
@@ -16,15 +15,13 @@ class SimpleMailer( MailmanMailerPlugin ):
         pass
 
 class SimpleMailChimpMailerPlugin( MailChimpMailerPlugin ):
-    name = 'Standard mailer'
-    # action_run_test = ''
+    name = 'MailChimp mailer'
 
-    action_parameters = [
-            ('name', 'list name', 'str'),
-            ( 'password', 'Admin password for list', 'str' ),
-            ( 'somenum', 'Some num', 'int' ),
-        ]
+    parameters = [
+        ('list_id', 1, 'str'),
+        ('enable_browser_link', False, 'bool'),
+    ]
     abstract = True
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self):
+        MailChimpMailerPlugin.__init__(self, self.parameters)

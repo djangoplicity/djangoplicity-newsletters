@@ -1,15 +1,26 @@
 from django.test import TestCase
-from djangoplicity.newsletters.models import Mailer, MailerParameter, MailerLog, make_nl_id, Newsletter, NewsletterType, MailChimpCampaign, Language
+from djangoplicity.newsletters.models import Mailer, MailerParameter, MailerLog, make_nl_id, Newsletter, NewsletterType, MailChimpCampaign, Language, NewsletterLanguage
 from djangoplicity.newsletters.mailers import MailChimpMailerPlugin, MailmanMailerPlugin, EmailMailerPlugin
 from test_project.models import SimpleMailer, SimpleMailChimpMailerPlugin
 from django.conf import settings
 
+from djangoplicity.mailinglists.models import MailChimpList
+
 class MailerTestCase(TestCase):
+
+    TEST_API_KEY = "5b9aa23a4e53e80db2de92975de8dd5b-us2"
+    TEST_LIST_ID = "326ca61f64"
+
+    #
+    # Helper methods
+    #
+    def _valid_list( self ):
+        return MailChimpList( api_key=self.TEST_API_KEY, list_id=self.TEST_LIST_ID )
 
 
     def createNewMailerMailChimp(self):
         Mailer.objects.all().delete()
-        m = Mailer(plugin='test_project.models.SimpleMailer', name='Simple Mailer')
+        m = Mailer(plugin='test_project.models.SimpleMailChimpMailerPlugin', name='Simple MailChimpMailerPlugin')
         m.register_plugin(SimpleMailChimpMailerPlugin)
         m.save()
         return m
@@ -27,14 +38,21 @@ class MailerTestCase(TestCase):
         p.save()
         return p
     
+    def createNewsletterLanguage(self, newsletter_type, language):
+        NewsletterLanguage.objects.all().delete()
+        nll = NewsletterLanguage.objects.create(
+            newsletter_type = newsletter_type,
+            language = language
+        )
+        nll.save()
+        return nll
+    
     def createNewsletterType(self):
         NewsletterType.objects.all().delete()
         l = self.createLanguage()
         m = self.createNewMailer()
-        l.save()
-        m.save()
-        print Language.objects.all()
-        n = NewsletterType.objects.create(
+        # print Language.objects.all()
+        nt = NewsletterType.objects.create(
             id=1,
             name='NewsletterType Test',
             slug='slug-test',
@@ -42,16 +60,16 @@ class MailerTestCase(TestCase):
             default_from_email='test@test.com',
             # languages=l
         )
-        # n.save()
-        # n.languages.add(l)
-        return n
+        nll = self.createNewsletterLanguage(nt, l)
+        return nt
     
     def createNewsletter(self, newsletterType):
         Newsletter.objects.all().delete()
         n = Newsletter.objects.create(
-            id='slug-test-newsletters',
+            id='1',
             type=newsletterType
         )
+        n.save()
         return n
     
     def createLanguage(self):
@@ -59,6 +77,7 @@ class MailerTestCase(TestCase):
         l = Language.objects.create(
             lang = settings.LANGUAGE_CODE
         )
+        l.save()
         return l
 
     def test_list_mailer(self):
@@ -113,8 +132,33 @@ class MailerTestCase(TestCase):
         self.assertEquals(make_nl_id(), u'1')
 
     def test_on_scheduled(self):
+        # l = self._valid_list()
+        # sm = SimpleMailChimpMailerPlugin()
         a = self.createNewMailerMailChimp()
-        # nlt = self.createNewsletterType()
-        # nl = self.createNewsletter(nlt)
-        # a.on_scheduled(nl)
-        print MailChimpCampaign.objects.all()
+        nlt = self.createNewsletterType()
+        nl = self.createNewsletter(nlt)
+        # print a.on_scheduled(nl)
+
+    def test__unicode__(self):
+        m = self.createNewMailer()
+        self.assertEquals(m.__unicode__(), 'Standard mailer: Simple Mailer')
+    
+    def test_log_entry(self):
+        m = self.createNewMailer()
+        nlt = self.createNewsletterType()
+        nl = self.createNewsletter(nlt)
+        log = m._log_entry(nl)
+        self.assertEquals(m.name, 'Simple Mailer')
+    
+    def test_send_test(self):
+        m = self.createNewMailerMailChimp()
+        nlt = self.createNewsletterType()
+        nl = self.createNewsletter(nlt)
+        self.assertEquals(m.send_test(nl), None)
+
+    def test_send_now(self):
+            nlt = self.createNewsletterType()
+            nl = self.createNewsletter(nlt)
+            m = self.createNewMailerMailChimp()
+            # print m.send_now(nl)
+        
