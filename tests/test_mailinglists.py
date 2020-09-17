@@ -123,6 +123,11 @@ class MailChimpListTest(TestCase):
         Subscriber.objects.all().delete()
         MailChimpList.objects.all().delete()
 
+    def test_list_str(self):
+        self.assertEqual(str(self.list), self.list.list_id)
+        list = MailChimpList(api_key='invalid_key', list_id='invalid_id')
+        self.assertEqual(str(list), 'invalid_id')
+
     def test_mailchip_list_creation(self):
         list = self._valid_list()
         list.save()
@@ -179,7 +184,7 @@ class MailChimpListTest(TestCase):
     def test_susbcribe_bad_merge_fields(self):
         with self.assertRaises(Exception) as context:
             self.list.subscribe('admin@hubble.org', {'invalid': 'invalid'}, 'text')
-        # print context.exception
+
         self.assertTrue('Invalid merge field invalid - allowed variables are INTERESTS' in context.exception)
 
     def test_unsubscribe(self):
@@ -187,7 +192,7 @@ class MailChimpListTest(TestCase):
 
         self.list.unsubscribe(email)
         self.assertTrue(self.list.unsubscribe(email))
-        # to test that the subscribers doesn't exist
+        # to test that the subscriber doesn't exist
         self.assertTrue(self.list.unsubscribe('another@hubble.org'))
 
 
@@ -328,3 +333,36 @@ class WebHooksTest(TestCase):
         }
         response = self._mailchimp_webhook(data)
         self.assertEqual(response.status_code, 200)
+
+
+class SimpleModelsTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.list = MailChimpList(api_key=TEST_API_KEY, list_id=TEST_LIST_ID)
+
+    def test_mailchimp_merge_var_str(self):
+        from djangoplicity.mailinglists.models import MailChimpMergeVar
+        merge_var = MailChimpMergeVar(list=self.list, name='merge_var_test')
+        self.assertEqual(str(merge_var), '%s: merge_var_test' % self.list.list_id)
+
+    def test_mailchimp_group_str(self):
+        from djangoplicity.mailinglists.models import MailChimpGroup
+        group = MailChimpGroup(list=self.list, name='sample_group')
+        self.assertEqual(str(group), '%s: sample_group' % self.list.list_id)
+
+    def test_mailchimp_grouping_str(self):
+        from djangoplicity.mailinglists.models import MailChimpGrouping
+        grouping = MailChimpGrouping(list=self.list, name='sample_grouping', option='sample_grouping_option')
+        self.assertEqual(str(grouping), 'sample_grouping: sample_grouping_option')
+
+    def test_mailchimp_group_mapping_str(self):
+        from djangoplicity.mailinglists.models import MailChimpGroup, GroupMapping
+        group = MailChimpGroup(list=self.list, name='sample_group')
+        group_mapping = GroupMapping(list=self.list, group=group, field='sample_field')
+        self.assertEqual(str(group_mapping), '%s -> sample_field' % str(group))
+
+    def test_merge_var_mapping_str(self):
+        from djangoplicity.mailinglists.models import MailChimpMergeVar, MergeVarMapping
+        merge_var = MailChimpMergeVar(list=self.list, name='merge_var_test')
+        merge_var_mapping = MergeVarMapping(list=self.list, merge_var=merge_var, field='sample_field')
+        self.assertEqual(str(merge_var_mapping), '%s -> sample_field' % str(merge_var))
