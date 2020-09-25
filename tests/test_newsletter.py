@@ -8,14 +8,14 @@ from djangoplicity.mailinglists.models import MailChimpList
 
 class MailerTestCase(TestCase):
 
-    TEST_API_KEY = "5b9aa23a4e53e80db2de92975de8dd5b-us2"
-    TEST_LIST_ID = "326ca61f64"
+    TEST_API_KEY = "78ce5b4dfc49245cacd9fa255acf14d0-us10"
+    TEST_LIST_ID = "ed25775a52"
 
     #
     # Helper methods
     #
     def _valid_list( self ):
-        return MailChimpList( api_key=self.TEST_API_KEY, list_id=self.TEST_LIST_ID )
+        return MailChimpList.objects.create( api_key=self.TEST_API_KEY, list_id=self.TEST_LIST_ID )
 
 
     def createNewMailerMailChimp(self):
@@ -32,9 +32,15 @@ class MailerTestCase(TestCase):
         m.save()
         return m
     
-    def createNewMailerParameter(self, mailer):
+    def createNewMailerParameterListId(self, mailer):
         MailerParameter.objects.all().delete()
-        p = MailerParameter.objects.create(mailer=mailer ,name='test', value='value test')
+        p1 = MailerParameter.objects.create(mailer=mailer ,name='list_id', value='ed25775a52')
+        p1.save()
+        return p1
+    
+    def createNewMailerParameterEnable_browser_link(self, mailer):
+        # MailerParameter.objects.all().delete()
+        p = MailerParameter.objects.create(mailer=mailer ,name='enable_browser_link', value=False)
         p.save()
         return p
     
@@ -97,24 +103,24 @@ class MailerTestCase(TestCase):
     
     def test_get_plugin(self):
         m = self.createNewMailer()
-        p = self.createNewMailerParameter(m)
+        p = self.createNewMailerParameterListId(m)
         self.assertIsInstance(m.get_plugin(), SimpleMailer)
     
     def test_get_parameters(self):
         m = self.createNewMailer()
-        p = self.createNewMailerParameter(m)
-        self.assertEquals(m.get_parameters(), {u'test': u'value test'})
+        p = self.createNewMailerParameterListId(m)
+        self.assertEquals(m.get_parameters(), {u'list_id': u'ed25775a52'})
 
     def test_dispatch(self):
         a = self.createNewMailer()
-        p = self.createNewMailerParameter(a)
+        p = self.createNewMailerParameterListId(a)
         #self.assertTrue(SimpleAction.successful())
         a.post_save_handler()
 
     def test_get_value(self):
         a = self.createNewMailer()
-        p = self.createNewMailerParameter(a)
-        self.assertEquals(p.get_value(), u'value test')
+        p = self.createNewMailerParameterListId(a)
+        self.assertEquals(p.get_value(), u'ed25775a52')
     
     def test_create_mailerLog(self):
         a = MailerLog(plugin='test_project.tests.SimpleAction', name='Simple action')
@@ -122,7 +128,7 @@ class MailerTestCase(TestCase):
     
     def test_get_class_path(self):
         a = self.createNewMailer()
-        p = self.createNewMailerParameter(a)
+        p = self.createNewMailerParameterListId(a)
         log = a.get_plugin()
         path = log.get_class_path()
         self.assertEquals(path, SimpleMailer.get_class_path())
@@ -157,8 +163,14 @@ class MailerTestCase(TestCase):
         self.assertEquals(m.send_test(nl), None)
 
     def test_send_now(self):
-            nlt = self.createNewsletterType()
-            nl = self.createNewsletter(nlt)
-            m = self.createNewMailerMailChimp()
-            # print m.send_now(nl)
+        l = self._valid_list()
+        l.save()
+        print MailChimpList.objects.all()
+        nlt = self.createNewsletterType()
+        nl = self.createNewsletter(nlt)
+        m = self.createNewMailerMailChimp()
+        p1 = self.createNewMailerParameterListId(m)
+        p2 = self.createNewMailerParameterEnable_browser_link(m)
+        # print m.send_now(nl) 
+        print m.get_parameters()
         

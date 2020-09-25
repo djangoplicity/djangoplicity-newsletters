@@ -18,10 +18,10 @@ class SimpleMailChimpMailerPlugin( MailChimpMailerPlugin ):
     name = 'MailChimp mailer'
 
     parameters = [
-        ('list_id', 1, 'str'),
+        ('list_id', 'ed25775a52', 'str'),
         ('enable_browser_link', False, 'bool'),
     ]
     abstract = True
 
-    def __init__(self):
-        MailChimpMailerPlugin.__init__(self, self.parameters)
+    def __init__(self, parameters):
+        MailChimpMailerPlugin.__init__(self, parameters)
