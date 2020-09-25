@@ -113,7 +113,8 @@ class MailChimpListTest(TestCase):
                 pass
 
     def _reset(self):
-        from djangoplicity.mailinglists.models import MailChimpListToken, MailChimpSourceList, MailChimpSubscriberExclude
+        from djangoplicity.mailinglists.models import MailChimpListToken, MailChimpSourceList, \
+            MailChimpSubscriberExclude
 
         Subscription.objects.all().delete()
         MailChimpListToken.objects.all().delete()
@@ -167,7 +168,8 @@ class MailChimpListTest(TestCase):
         self.assertEqual(client.ping.get()['health_status'], "Everything's Chimpy!")
 
     def test_subscribe(self):
-        self.assertTrue(self.list.subscribe('admin@hubble.org', None, 'text'))
+        # self.assertTrue(self.list.subscribe('test@eso.org', {'INTERESTS': {'id': True, 'name': True, }}, 'text'))
+        self.assertTrue(self.list.subscribe('another@eso.org', None, 'text'))
 
     def test_susbcribe_bad_email_address(self):
         email = 'admin@hubble.org'
