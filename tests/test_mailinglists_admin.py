@@ -34,7 +34,6 @@ class AdminSiteTests(TestCase):
         res = self.client.get(url)
 
         self.assertEquals(res.status_code, 200)
-        self.assertContains(res, TEST_API_KEY)
         self.assertContains(res, "List information")
         self.assertContains(res, "Following information is configured in MailChimp administration interface.")
         # test that contains inline admins
