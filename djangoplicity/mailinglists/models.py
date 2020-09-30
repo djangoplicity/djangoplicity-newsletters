@@ -52,7 +52,7 @@ from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
 from django.db import models
 from django.db.models.signals import post_save
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_unicode, python_2_unicode_compatible
 
 from djangoplicity.actions.models import EventAction  # pylint: disable=no-name-in-module
 from djangoplicity.mailinglists.mailman import MailmanList
@@ -82,7 +82,7 @@ def _object_identifier(obj):
 
 
 # Models
-
+@python_2_unicode_compatible
 class BadEmailAddress(models.Model):
     '''
     Bad email addresses which was found to bounce back emails.
@@ -90,7 +90,7 @@ class BadEmailAddress(models.Model):
     email = models.EmailField(unique=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email
 
     class Meta:
@@ -98,19 +98,21 @@ class BadEmailAddress(models.Model):
         verbose_name_plural = 'bad email addresses'
 
 
+@python_2_unicode_compatible
 class Subscriber(models.Model):
     '''
     Subscriber (i.e an email address) to one or more lists.
     '''
     email = models.EmailField(unique=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email
 
     class Meta:
         ordering = ('email', )
 
 
+@python_2_unicode_compatible
 class List(models.Model):
     """
     Mailman list
@@ -248,13 +250,14 @@ class List(models.Model):
             for e in unsubscribe:
                 self._unsubscribe(e)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
         ordering = ('name',)
 
 
+@python_2_unicode_compatible
 class Subscription(models.Model):
     """
     Relation between subscribers and lists.
@@ -262,7 +265,7 @@ class Subscription(models.Model):
     subscriber = models.ForeignKey(Subscriber)
     list = models.ForeignKey(List)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s subscribed to %s" % (self.subscriber, self.list)
 
     class Meta:
@@ -270,6 +273,7 @@ class Subscription(models.Model):
         ordering = ('subscriber__email',)
 
 
+@python_2_unicode_compatible
 class MailChimpList(models.Model):
     '''
     A list already defined in MailChimp.
@@ -800,7 +804,7 @@ class MailChimpList(models.Model):
         if created and not raw:
             webhooks.delay(list_id=instance.list_id)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name if self.name else self.list_id
 
     class Meta:
@@ -824,6 +828,7 @@ MERGEFIELD_DATATYPES = [
 ]
 
 
+@python_2_unicode_compatible
 class MailChimpMergeVar(models.Model):
     '''
     Store information about mailchimp mergefields for each list.
@@ -842,7 +847,7 @@ class MailChimpMergeVar(models.Model):
     tag = models.CharField(max_length=255, blank=True)
     choices = models.TextField(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (self.list,
             self.name if self.field_type != 'address' else
                 '%s (addr1,addr2,city,state,zip,country)' % self.name)
@@ -852,6 +857,7 @@ class MailChimpMergeVar(models.Model):
         verbose_name = 'mailchimp merge field'
 
 
+@python_2_unicode_compatible
 class MailChimpGroup(models.Model):
     '''
     Represent a Mailchimp Interest Category (formerly known as Group)
@@ -860,10 +866,11 @@ class MailChimpGroup(models.Model):
     group_id = models.CharField(db_index=True, max_length=50)
     name = models.CharField(max_length=255)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (self.list, self.name)
 
 
+@python_2_unicode_compatible
 class MailChimpGrouping(models.Model):
     '''
     Represent a Mailchimp Interest (formerly known as Grouping)
@@ -874,13 +881,14 @@ class MailChimpGrouping(models.Model):
     name = models.CharField(max_length=255)
     option = models.TextField(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (self.name, self.option)
 
     class Meta:
         ordering = ['name', 'option']
 
 
+@python_2_unicode_compatible
 class GroupMapping(models.Model):
     '''
     Mapping between a Mailchimp Group and a field.
@@ -920,10 +928,11 @@ class GroupMapping(models.Model):
 
         return interests
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s -> %s" % (self.group, self.field)
 
 
+@python_2_unicode_compatible
 class MergeVarMapping(models.Model):
     '''
     Mapping between a Mailchimp Merge Field (formally Merge Var) and a django
@@ -1009,7 +1018,7 @@ class MergeVarMapping(models.Model):
 
         return (self.merge_var.tag, val)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s -> %s' % (self.merge_var, self.field)
 
 
