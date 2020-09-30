@@ -3,6 +3,7 @@ from django.utils import timezone
 from mailchimp3 import MailChimp
 from mailchimp3.mailchimpclient import MailChimpError
 
+from djangoplicity.mailinglists.mailman import MailmanList
 from djangoplicity.mailinglists.models import List, Subscriber, Subscription, BadEmailAddress, MailChimpList
 from test_project.settings import NEWSLETTERS_MAILCHIMP_API_KEY
 
@@ -80,6 +81,14 @@ class ListTest(TestCase):
         with self.assertRaises(Exception) as context:
             self.list.unsubscribe()
         self.assertTrue("Expected either subscriber or email keyword arguments to be provided." in context.exception)
+
+    def test_mailman_list(self):
+        mailman_list = MailmanList(name=self.LIST_NAME, password=self.LIST_PASSWORD, main_url=self.LIST_BASEURL)
+        self.assertEquals(
+            mailman_list.get_admin_url(),
+            "%s/admin/%s/?adminpw=%s" % (self.LIST_BASEURL, self.LIST_NAME, self.LIST_PASSWORD)
+        )
+        self.assertEquals(mailman_list.get_members(), [])
 
 
 class MailChimpListTest(TestCase):
