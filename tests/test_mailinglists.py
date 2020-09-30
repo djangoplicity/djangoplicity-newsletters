@@ -1,11 +1,12 @@
 from django.test import TestCase, RequestFactory
+from django.utils import timezone
 from mailchimp3 import MailChimp
 from mailchimp3.mailchimpclient import MailChimpError
-from django.utils import timezone
 
 from djangoplicity.mailinglists.models import List, Subscriber, Subscription, BadEmailAddress, MailChimpList
+from test_project.settings import NEWSLETTERS_MAILCHIMP_API_KEY
 
-TEST_API_KEY = "78ce5b4dfc49245cacd9fa255acf14d0-us10"
+TEST_API_KEY = NEWSLETTERS_MAILCHIMP_API_KEY
 TEST_LIST_ID = "ed25775a52"
 
 
