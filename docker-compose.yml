@@ -34,6 +34,7 @@ services:
     environment:
       BEAT: ${BEAT:-OFF}
       NEWSLETTERS_MAILCHIMP_API_KEY: ${NEWSLETTERS_MAILCHIMP_API_KEY}
+      NEWSLETTERS_MAILCHIMP_LIST_ID: ${NEWSLETTERS_MAILCHIMP_LIST_ID}
     depends_on:
       - db
 
