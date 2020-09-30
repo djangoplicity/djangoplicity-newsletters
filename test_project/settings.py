@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'djangoplicity.admincomments',
     'djangoplicity.archives.contrib.security',
     'djangoplicity.archives',
-    'djangoplicity.contacts',
     'djangoplicity.metadata',
     'djangoplicity.mailinglists',
     'djangoplicity.newsletters',
@@ -172,7 +171,7 @@ SUBJECT_CATEGORY_CSS = "djangoplicity/css/widgets.css"
 
 NEWSLETTERS_ARCHIVE_ROOT = 'archives/newsletters/'
 
-NEWSLETTERS_MAILCHIMP_APIKEY = '78ce5b4dfc49245cacd9fa255acf14d0'
+NEWSLETTERS_MAILCHIMP_API_KEY = os.environ.get('NEWSLETTERS_MAILCHIMP_API_KEY')
 
 TINYMCE_DEFAULT_CONFIG = {
     'height': 360,
