@@ -13,8 +13,5 @@ celery==4.3.0
 # Djangoplicity actions
 git+https://@github.com/djangoplicity/djangoplicity-actions@develop
 
-# Djangoplicity contacts
-git+https://@github.com/djangoplicity/djangoplicity-contacts@master
-
 # Djangoplicity
 git+https://@github.com/djangoplicity/djangoplicity.git@develop
