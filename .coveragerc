@@ -17,3 +17,5 @@ omit =
   djangoplicity/newsletters/mailers.py
   djangoplicity/mailinglists/tasks/mailman.py
   djangoplicity/mailinglists/tasks/mailman_actions.py
+  djangoplicity/mailinglists/tasks/mailchimp_tasks.py
+  djangoplicity/mailinglists/tasks/mailchimp_actions.py
