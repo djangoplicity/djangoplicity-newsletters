@@ -5,10 +5,10 @@ from mailchimp3.mailchimpclient import MailChimpError
 
 from djangoplicity.mailinglists.mailman import MailmanList
 from djangoplicity.mailinglists.models import List, Subscriber, Subscription, BadEmailAddress, MailChimpList
-from test_project.settings import NEWSLETTERS_MAILCHIMP_API_KEY
+from test_project.settings import NEWSLETTERS_MAILCHIMP_API_KEY, NEWSLETTERS_MAILCHIMP_LIST_ID
 
 TEST_API_KEY = NEWSLETTERS_MAILCHIMP_API_KEY
-TEST_LIST_ID = "ed25775a52"
+TEST_LIST_ID = NEWSLETTERS_MAILCHIMP_LIST_ID
 
 
 class ListTest(TestCase):

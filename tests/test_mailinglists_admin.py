@@ -3,10 +3,10 @@ from django.urls import reverse
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from test_project.settings import NEWSLETTERS_MAILCHIMP_API_KEY
+from test_project.settings import NEWSLETTERS_MAILCHIMP_API_KEY, NEWSLETTERS_MAILCHIMP_LIST_ID
 
 TEST_API_KEY = NEWSLETTERS_MAILCHIMP_API_KEY
-TEST_LIST_ID = "ed25775a52"
+TEST_LIST_ID = NEWSLETTERS_MAILCHIMP_LIST_ID
 
 
 class AdminSiteTests(TestCase):
