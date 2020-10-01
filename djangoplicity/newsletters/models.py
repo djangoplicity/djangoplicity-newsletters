@@ -48,6 +48,7 @@ The newsletter system consists of the following components:
 # pylint: disable=E0611
 from builtins import str
 from builtins import object
+from future.utils import python_2_unicode_compatible
 import logging
 import requests
 import traceback
