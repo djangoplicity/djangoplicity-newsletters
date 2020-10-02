@@ -6,10 +6,12 @@ from django.conf import settings
 
 from djangoplicity.mailinglists.models import MailChimpList
 
+from test_project.settings import NEWSLETTERS_MAILCHIMP_API_KEY, NEWSLETTERS_MAILCHIMP_LIST_ID
+
 class MailerTestCase(TestCase):
 
-    TEST_API_KEY = "78ce5b4dfc49245cacd9fa255acf14d0-us10"
-    TEST_LIST_ID = "ed25775a52"
+    TEST_API_KEY = NEWSLETTERS_MAILCHIMP_API_KEY
+    TEST_LIST_ID = NEWSLETTERS_MAILCHIMP_LIST_ID
 
     #
     # Helper methods
