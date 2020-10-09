@@ -8,6 +8,13 @@
 Djangoplicity Newsletters is a dependency of the [Djangoplicity](https://github.com/djangoplicity/djangoplicity) CMS
 created by the European Southern Observatory (ESO) for managing Newsletters, Mailing Lists, Subscribers and so much more.
 
+* [Requirements](#requirements)
+* [Installation](#installation)
+    * [Requirements](#requirements)
+    * [Migrations](#migrations)
+* [Development](#development)
+* [License](#license)
+
 ## Installation
 
 If you are using Docker, you can look for an example in `Dockerfile` and `docker-compose.yml` files located in the root
@@ -160,7 +167,7 @@ admin_site.register(django.contrib.auth.models.User, django.contrib.auth.admin.U
 admin_site.register(django.contrib.auth.models.Group, django.contrib.auth.admin.GroupAdmin)
 ```
 
-## Migration
+### Migrations
 
 Next, make the migrations for the `django_mailman` package:
 ```bash
