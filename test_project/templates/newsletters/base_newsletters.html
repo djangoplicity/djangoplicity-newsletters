@@ -19,7 +19,7 @@
 {% block header %}
     {% with width="700" height="300" color="#000000" logo_width="140" logo_url=base_url|add:MEDIA_URL|add:"esa_nl_logo.png" %}
     {% block header_content %}
-        {% with header_title="ESA/Hubble" %}
+        {% with header_title="Djangoplicity Newsletters" %}
         {% include "newsletters/includes/header.html" %}
         {% endwith %}
     {% endblock %}
@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block footer %}
-    {% with org="ESA/Hubble" %}
+    {% with org="Djangoplicity Newsletters" %}
     {% include "newsletters/includes/footer.html" %}
     {% endwith %}
 {% endblock %}

@@ -14,7 +14,7 @@ class TestEmailGeneration(TestCase):
         self.client = Client()
         self.admin_user = get_user_model().objects.create_superuser(
             username='admin',
-            email='admin@hubble.org',
+            email='admin@newsletters.org',
             password='password123'
         )
         self.client.force_login(self.admin_user)
@@ -47,7 +47,7 @@ class TestEmailGeneration(TestCase):
         response = self.client.get(url, follow=True)
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, """<iframe src="/newsletters/hubble-news/htmlembed/{0}/" width="100%" scrolling="no" frameBorder="0" onload='javascript:resizeIframe(this);'></iframe>""".format(self.newsletter.pk))
+        self.assertContains(response, """<iframe src="/newsletters/{0}/htmlembed/{1}/" width="100%" scrolling="no" frameBorder="0" onload='javascript:resizeIframe(this);'></iframe>""".format(self.newsletter_type.slug, self.newsletter.pk))
 
     def test_newsletter_embed_html(self):
         """Test newsletter embed html is properly rendered"""

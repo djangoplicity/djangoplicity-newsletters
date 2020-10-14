@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load djangoplicity_text_utils %}
-ESA/Hubble/JWST Science Newsletter
+Djangoplicity Newsletters Science Newsletter
 ======================
 {% if editorial %}
 {% if editorial_subject %}
@@ -23,4 +23,4 @@ Science Announcements
 {% comment %} https://www.spacetelescope.org/forscientists/announcements/sci16008/ {% endcomment %}
 
 {% endfor %}{% endif %}
-{% with email="hubble@eso.org" %}{% include "newsletters/includes/text/footer.txt" %}{% endwith %}
+{% with email="djangoplicity-newsletters@eso.org" %}{% include "newsletters/includes/text/footer.txt" %}{% endwith %}
