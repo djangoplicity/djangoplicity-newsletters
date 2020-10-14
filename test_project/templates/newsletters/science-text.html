@@ -1,0 +1,26 @@
+{% load i18n %}
+{% load djangoplicity_text_utils %}
+ESA/Hubble/JWST Science Newsletter
+======================
+{% if editorial %}
+{% if editorial_subject %}
+*{{ editorial_subject }}*
+{% endif %}
+{{ editorial_text }}
+{% endif %}
+
+{% if data.scienceannouncements %}
+Science Announcements
+-------------------------
+{% for announcement in data.scienceannouncements %}
+*{{ announcement.title|safe }}{% if announcement.subtitle%} - {{ announcement.subtitle|safe }}{% endif %}*
+
+{{ announcement.release_date|date }}: {{ announcement.description|striptags|truncatewords:50|unescape|safe }} [read more on {{base_url}}{{ announcement.get_absolute_url }}]
+
+
+
+{% comment %} How to advertise your Hubble results: {% endcomment %}
+{% comment %} https://www.spacetelescope.org/forscientists/announcements/sci16008/ {% endcomment %}
+
+{% endfor %}{% endif %}
+{% with email="hubble@eso.org" %}{% include "newsletters/includes/text/footer.txt" %}{% endwith %}
