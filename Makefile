@@ -16,3 +16,6 @@ migrate:
 
 makemigrations:
 	docker exec -it djangoplicity-newsletters python manage.py makemigrations
+
+test_newsletter:
+	docker exec -it djangoplicity-newsletters env DJANGO_SETTINGS_MODULE="test_project.test_settings" coverage run --source='.' manage.py test tests.test_newsletter
