@@ -1059,8 +1059,8 @@ class MailChimpListToken(models.Model):
         '''
         m = hashlib.sha224()
         m.update(str(settings.SECRET_KEY).encode("utf-8"))
-        m.update(list_id)
-        m.update(uuid)
+        m.update(str(list_id).encode("utf-8"))
+        m.update(str(uuid).encode("utf-8"))
         return str(m.hexdigest())
 
     @classmethod
