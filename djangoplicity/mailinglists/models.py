@@ -511,7 +511,7 @@ class MailChimpList(models.Model):
             interests = {}
 
         # Check if the email is already subscribed:
-        email_hash = hashlib.md5(str(email).encode("utf-8")(email).encode("utf-8")).hexdigest()
+        email_hash = hashlib.md5(str(email).encode("utf-8")).hexdigest()
         logger.debug('Will run lists.members.get for email "%s"', email)
         try:
             self.connection(
