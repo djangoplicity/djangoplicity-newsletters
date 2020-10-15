@@ -1,3 +1,5 @@
+from future.standard_library import install_aliases
+install_aliases()
 from django.test import TestCase, RequestFactory
 from django.utils import timezone
 from mailchimp3 import MailChimp
