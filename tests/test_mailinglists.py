@@ -252,7 +252,7 @@ class WebHooksTest(TestCase):
         self.factory = RequestFactory()
 
         from djangoplicity.mailinglists.models import MailChimpList, MailChimpListToken
-        from urllib import urlencode
+        from urllib.parse import urlencode
 
         list = MailChimpList(api_key=TEST_API_KEY, list_id=TEST_LIST_ID, connected=True)
         list.save()
