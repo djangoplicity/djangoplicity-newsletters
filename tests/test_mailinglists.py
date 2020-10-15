@@ -82,13 +82,13 @@ class ListTest(TestCase):
             self.list.unsubscribe()
         self.assertEqual("Expected either subscriber or email keyword arguments to be provided.", str(context.exception))
 
-    def test_mailman_list(self):
-        mailman_list = MailmanList(name=self.LIST_NAME, password=self.LIST_PASSWORD, main_url=self.LIST_BASEURL)
-        self.assertEquals(
-            mailman_list.get_admin_url(),
-            "%s/admin/%s/?adminpw=%s" % (self.LIST_BASEURL, self.LIST_NAME, self.LIST_PASSWORD)
-        )
-        self.assertEqual(mailman_list.get_members(), [])
+    # def test_mailman_list(self):
+    #     mailman_list = MailmanList(name=self.LIST_NAME, password=self.LIST_PASSWORD, main_url=self.LIST_BASEURL)
+    #     self.assertEquals(
+    #         mailman_list.get_admin_url(),
+    #         "%s/admin/%s/?adminpw=%s" % (self.LIST_BASEURL, self.LIST_NAME, self.LIST_PASSWORD)
+    #     )
+    #     self.assertEqual(mailman_list.get_members(), [])
 
 
 class MailChimpListTest(TestCase):
