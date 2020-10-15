@@ -321,8 +321,8 @@ class MailChimpList(models.Model):
     content_type = models.ForeignKey(ContentType, null=True, blank=True,
         help_text='Select the content type of objects that subscribers on '
         'this list can be linked with.', on_delete=models.CASCADE)
-    primary_key_field = models.ForeignKey('MailChimpMergeVar', models.SET_NULL,
-            blank=True, null=True, on_delete=models.CASCADE)
+    primary_key_field = models.ForeignKey('MailChimpMergeVar',
+            blank=True, null=True, on_delete=models.SET_NULL)
 
     def mailchimp_dc(self):
         '''
