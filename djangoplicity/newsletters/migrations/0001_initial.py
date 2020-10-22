@@ -164,7 +164,7 @@ class Migration(migrations.Migration):
                 ('limit', models.CharField(max_length=255, blank=True)),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE)),
                 ('ordering', models.ForeignKey(blank=True, to='newsletters.DataSourceOrdering', null=True, on_delete=models.CASCADE)),
-                ('selectors', models.ManyToManyField(to='newsletters.DataSourceSelector', blank=True, on_delete=models.CASCADE)),
+                ('selectors', models.ManyToManyField(to='newsletters.DataSourceSelector', blank=True)),
             ],
             options={
                 'ordering': ['type__name', 'title'],
