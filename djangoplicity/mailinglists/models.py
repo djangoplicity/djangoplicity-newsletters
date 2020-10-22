@@ -263,7 +263,7 @@ class Subscription(models.Model):
     """
     Relation between subscribers and lists.
     """
-    subscriber = models.ForeignKey(Subscriber, on_delete=models.CASCADE)
+    subscriber = models.ForeignKey(Subscriber)
     list = models.ForeignKey(List, on_delete=models.CASCADE)
 
     def __str__(self):

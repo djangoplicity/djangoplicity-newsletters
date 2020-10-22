@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('on_event', models.CharField(max_length=50, db_index=True)),
-                ('action', models.ForeignKey(to='actions.Action')),
+                ('action', models.ForeignKey(to='actions.Action', on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,
@@ -114,7 +114,7 @@ class Migration(migrations.Migration):
                 ('click_rate', models.IntegerField(help_text=b'per campaign', null=True, blank=True)),
                 ('connected', models.BooleanField(default=False)),
                 ('last_sync', models.DateTimeField(null=True, blank=True)),
-                ('content_type', models.ForeignKey(blank=True, to='contenttypes.ContentType', help_text=b'Select the content type of objects that subscribers on this list can be linked with.', null=True)),
+                ('content_type', models.ForeignKey(blank=True, to='contenttypes.ContentType', help_text=b'Select the content type of objects that subscribers on this list can be linked with.', null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('name',),
@@ -128,7 +128,7 @@ class Migration(migrations.Migration):
                 ('uuid', models.CharField(unique=True, max_length=36, verbose_name=b'UUID')),
                 ('token', models.CharField(unique=True, max_length=56)),
                 ('expired', models.DateTimeField(null=True, blank=True)),
-                ('list', models.ForeignKey(to='mailinglists.MailChimpList')),
+                ('list', models.ForeignKey(to='mailinglists.MailChimpList', on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -148,7 +148,7 @@ class Migration(migrations.Migration):
                 ('size', models.CharField(max_length=255, blank=True)),
                 ('tag', models.CharField(max_length=255, blank=True)),
                 ('choices', models.TextField(blank=True)),
-                ('list', models.ForeignKey(to='mailinglists.MailChimpList')),
+                ('list', models.ForeignKey(to='mailinglists.MailChimpList', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['list', 'name'],
@@ -160,8 +160,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('field', models.CharField(max_length=255)),
-                ('list', models.ForeignKey(to='mailinglists.MailChimpList')),
-                ('merge_var', models.ForeignKey(to='mailinglists.MailChimpMergeVar')),
+                ('list', models.ForeignKey(to='mailinglists.MailChimpList', on_delete=models.CASCADE)),
+                ('merge_var', models.ForeignKey(to='mailinglists.MailChimpMergeVar', on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -182,8 +182,8 @@ class Migration(migrations.Migration):
             name='Subscription',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('list', models.ForeignKey(to='mailinglists.List')),
-                ('subscriber', models.ForeignKey(to='mailinglists.Subscriber')),
+                ('list', models.ForeignKey(to='mailinglists.List', on_delete=models.CASCADE)),
+                ('subscriber', models.ForeignKey(to='mailinglists.Subscriber', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('subscriber__email',),
@@ -197,25 +197,25 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='mailchimplist',
             name='primary_key_field',
-            field=models.ForeignKey(blank=True, to='mailinglists.MailChimpMergeVar', null=True),
+            field=models.ForeignKey(blank=True, to='mailinglists.MailChimpMergeVar', null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='mailchimpgrouping',
             name='list',
-            field=models.ForeignKey(to='mailinglists.MailChimpList'),
+            field=models.ForeignKey(to='mailinglists.MailChimpList', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='mailchimpgroup',
             name='list',
-            field=models.ForeignKey(to='mailinglists.MailChimpList'),
+            field=models.ForeignKey(to='mailinglists.MailChimpList', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='mailchimpeventaction',
             name='model_object',
-            field=models.ForeignKey(to='mailinglists.MailChimpList'),
+            field=models.ForeignKey(to='mailinglists.MailChimpList', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -227,13 +227,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='groupmapping',
             name='group',
-            field=models.ForeignKey(to='mailinglists.MailChimpGroup'),
+            field=models.ForeignKey(to='mailinglists.MailChimpGroup', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='groupmapping',
             name='list',
-            field=models.ForeignKey(to='mailinglists.MailChimpList'),
+            field=models.ForeignKey(to='mailinglists.MailChimpList', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]
