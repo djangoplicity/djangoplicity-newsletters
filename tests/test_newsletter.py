@@ -1,5 +1,5 @@
 from django.test import TestCase
-from djangoplicity.newsletters.models import Mailer, MailerParameter, MailerLog, make_nl_id, Newsletter, NewsletterType, MailChimpCampaign, Language, NewsletterLanguage
+from djangoplicity.newsletters.models import Mailer, MailerParameter, MailerLog, make_nl_id, Newsletter, NewsletterType, MailChimpCampaign, Language, NewsletterLanguage, NewsletterGenerator
 from djangoplicity.newsletters.mailers import MailChimpMailerPlugin, MailmanMailerPlugin, EmailMailerPlugin
 from test_project.models import SimpleMailer, SimpleMailChimpMailerPlugin
 from django.conf import settings
