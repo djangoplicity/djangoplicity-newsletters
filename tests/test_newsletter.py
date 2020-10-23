@@ -119,6 +119,7 @@ class MailerTestCase(TestCase):
         m = self.createNewMailer()
         p = self.createNewMailerParameterListId(m)
         p1 = self.createNewMailerParameterEnable_browser_link(m)
+        print m.get_plugin()
         self.assertIsInstance(m.get_plugin(), MailChimpMailerPlugin)
     
     def test_get_parameters(self):
