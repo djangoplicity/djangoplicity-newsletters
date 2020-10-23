@@ -6,12 +6,12 @@ from django.conf import settings
 
 from djangoplicity.mailinglists.models import MailChimpList
 
-# from test_project.settings import NEWSLETTERS_MAILCHIMP_API_KEY, NEWSLETTERS_MAILCHIMP_LIST_ID
+from test_project.settings import NEWSLETTERS_MAILCHIMP_API_KEY, NEWSLETTERS_MAILCHIMP_LIST_ID
 
 class MailerTestCase(TestCase):
 
-    TEST_API_KEY = '7dd7867f4605d1ef791b31dc64514f21-us2'
-    TEST_LIST_ID = '7727d019e9'
+    TEST_API_KEY = NEWSLETTERS_MAILCHIMP_API_KEY
+    TEST_LIST_ID = NEWSLETTERS_MAILCHIMP_LIST_ID
 
     #
     # Helper methods
@@ -66,7 +66,7 @@ class MailerTestCase(TestCase):
         nll = self.createNewsletterLanguage(nt, l)
         return nt
     
-    def createNewsletterTypeOther(self, mailer):
+    def createNewsletterTypeOther(self):
         NewsletterType.objects.all().delete()
         l = self.createLanguage()
         # print Language.objects.all()
@@ -76,10 +76,10 @@ class MailerTestCase(TestCase):
             slug='newsletterType-test',
             default_from_name='test',
             default_from_email='test@test.com',
-            mailers=mailer,
             # languages=l
         )
         nll = self.createNewsletterLanguage(nt, l)
+        nt.save()
         return nt
     
     def createNewsletter(self, newsletterType):
@@ -119,7 +119,6 @@ class MailerTestCase(TestCase):
         m = self.createNewMailer()
         p = self.createNewMailerParameterListId(m)
         p1 = self.createNewMailerParameterEnable_browser_link(m)
-        print m.get_plugin()
         self.assertIsInstance(m.get_plugin(), MailChimpMailerPlugin)
     
     def test_get_parameters(self):
@@ -185,9 +184,20 @@ class MailerTestCase(TestCase):
         m = self.createNewMailer()
         p1 = self.createNewMailerParameterListId(m)
         p2 = self.createNewMailerParameterEnable_browser_link(m)
-        # nlt = self.createNewsletterTypeOther(m)
-        # nlt.save()
-        # nl = self.createNewsletter(nlt)
-        # # print m.send_now(nl) 
+        nlt = self.createNewsletterTypeOther()
+        nlt.mailers.add(m)
+        nlt.save()
+        nl = self.createNewsletter(nlt)
+        # print m.send_now(nl) 
         # print m.get_parameters()
+    
+    def test_get_generator(self):
+        l = self._valid_list()
+        m = self.createNewMailer()
+        p1 = self.createNewMailerParameterListId(m)
+        p2 = self.createNewMailerParameterEnable_browser_link(m)
+        nlt = self.createNewsletterTypeOther()
+        nlt.mailers.add(m)
+        nlt.save()
+        self.assertIsInstance(nlt.get_generator(), NewsletterGenerator)
         
