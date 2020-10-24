@@ -29,6 +29,19 @@ class MailerTestCase(TestCase):
         m.save()
         return m
     
+    def createNewMailerTest(self):
+        Mailer.objects.all().delete()
+        m = Mailer(plugin='test_project.models.SimpleMailer', name='Simple Mailer')
+        m.register_plugin(SimpleMailer)
+        m.save()
+        return m
+    
+    def createNewMailerParameterTest(self, mailer):
+        MailerParameter.objects.all().delete()
+        p = MailerParameter.objects.create(mailer=mailer ,name='test', value='value test')
+        p.save()
+        return p
+    
     def createNewMailerParameterListId(self, mailer):
         MailerParameter.objects.all().delete()
         p1 = MailerParameter.objects.create(mailer=mailer ,name='list_id', value='7727d019e9')
@@ -105,7 +118,8 @@ class MailerTestCase(TestCase):
         list_test = [
             (MailChimpMailerPlugin.get_class_path(), MailChimpMailerPlugin.name),
             (MailmanMailerPlugin.get_class_path(), MailmanMailerPlugin.name),
-            (EmailMailerPlugin.get_class_path(), EmailMailerPlugin.name)
+            (EmailMailerPlugin.get_class_path(), EmailMailerPlugin.name),
+            (SimpleMailer.get_class_path(), SimpleMailer.name),
         ]
         # print list_choices
         self.assertEquals(list_choices, list_test )
@@ -115,12 +129,9 @@ class MailerTestCase(TestCase):
         self.assertEquals(m.get_plugincls(), MailChimpMailerPlugin)
     
     def test_get_plugin(self):
-        l = self._valid_list()
-        m = self.createNewMailer()
-        p = self.createNewMailerParameterListId(m)
-        p1 = self.createNewMailerParameterEnable_browser_link(m)
-        print m.get_plugin()
-        self.assertIsInstance(m.get_plugin(), MailChimpMailerPlugin)
+        m = self.createNewMailerTest()
+        p = self.createNewMailerParameterTest(m)
+        self.assertIsInstance(m.get_plugin(), SimpleMailer)
     
     def test_get_parameters(self):
         m = self.createNewMailer()
@@ -143,13 +154,11 @@ class MailerTestCase(TestCase):
         self.assertEquals(a.name, u'Simple action')
     
     def test_get_class_path(self):
-        l = self._valid_list()
-        a = self.createNewMailer()
-        p = self.createNewMailerParameterListId(a)
-        p1 = self.createNewMailerParameterEnable_browser_link(a)
+        a = self.createNewMailerTest()
+        p = self.createNewMailerParameterTest(a)
         log = a.get_plugin()
         path = log.get_class_path()
-        self.assertEquals(path, MailChimpMailerPlugin.get_class_path())
+        self.assertEquals(path, SimpleMailer.get_class_path())
     
     def test_get_id(self):
         a = self.createNewMailer()
