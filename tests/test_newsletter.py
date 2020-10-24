@@ -192,13 +192,13 @@ class MailerTestCase(TestCase):
         # print m.send_now(nl) 
         # print m.get_parameters()
     
-    def test_get_generator(self):
-        l = self._valid_list()
-        m = self.createNewMailer()
-        p1 = self.createNewMailerParameterListId(m)
-        p2 = self.createNewMailerParameterEnable_browser_link(m)
-        nlt = self.createNewsletterTypeOther()
-        nlt.mailers.add(m)
-        nlt.save()
-        # self.assertIsInstance(nlt.get_generator(), NewsletterGenerator)
+    # def test_get_generator(self):
+    #     l = self._valid_list()
+    #     m = self.createNewMailer()
+    #     p1 = self.createNewMailerParameterListId(m)
+    #     p2 = self.createNewMailerParameterEnable_browser_link(m)
+    #     nlt = self.createNewsletterTypeOther()
+    #     nlt.mailers.add(m)
+    #     nlt.save()
+    #     self.assertIsInstance(nlt.get_generator(), NewsletterGenerator)
         
