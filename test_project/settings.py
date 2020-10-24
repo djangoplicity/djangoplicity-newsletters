@@ -77,7 +77,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'djangoplicity/newsletters/templates'),
+            os.path.join(BASE_DIR, 'djangoplicity/newsletters/templates/newsletters'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
