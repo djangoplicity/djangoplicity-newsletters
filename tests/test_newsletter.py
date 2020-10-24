@@ -210,4 +210,25 @@ class MailerTestCase(TestCase):
         nlt.mailers.add(m)
         nlt.save()
         self.assertIsInstance(nlt.get_generator(), NewsletterGenerator)
-        
+
+    def test_get_absolute_url(self):
+        l = self._valid_list()
+        m = self.createNewMailer()
+        p1 = self.createNewMailerParameterListId(m)
+        p2 = self.createNewMailerParameterEnable_browser_link(m)
+        nlt = self.createNewsletterTypeOther()
+        nlt.mailers.add(m)
+        nlt.save()
+        self.assertEquals(nlt.get_absolute_url(), '/newsletters/newsletterType-test/')
+    
+    def test_get___unicode__(self):
+        l = self._valid_list()
+        m = self.createNewMailer()
+        p1 = self.createNewMailerParameterListId(m)
+        p2 = self.createNewMailerParameterEnable_browser_link(m)
+        nlt = self.createNewsletterTypeOther()
+        nlt.mailers.add(m)
+        nlt.save()
+        self.assertEquals(nlt.__unicode__(), 'NewsletterType Test')
+    
+    
