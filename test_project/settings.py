@@ -76,7 +76,9 @@ ROOT_URLCONF = 'test_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'djangoplicity/newsletters/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
