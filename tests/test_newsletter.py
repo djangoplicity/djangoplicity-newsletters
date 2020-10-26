@@ -1,5 +1,5 @@
 from django.test import TestCase
-from djangoplicity.newsletters.models import Mailer, MailerParameter, MailerLog, make_nl_id, Newsletter, NewsletterType, MailChimpCampaign, Language, NewsletterLanguage, NewsletterGenerator
+from djangoplicity.newsletters.models import Mailer, MailerParameter, MailerLog, make_nl_id, Newsletter, NewsletterType, MailChimpCampaign, Language, NewsletterLanguage, NewsletterGenerator, DataSourceSelector
 from djangoplicity.newsletters.mailers import MailChimpMailerPlugin, MailmanMailerPlugin, EmailMailerPlugin
 from test_project.models import SimpleMailer, SimpleMailChimpMailerPlugin
 from django.conf import settings
@@ -18,9 +18,22 @@ class MailerTestCase(TestCase):
     #
     def _valid_list( self ):
         MailChimpList.objects.all().delete()
-        l = MailChimpList( api_key=self.TEST_API_KEY, list_id=self.TEST_LIST_ID )
+        l = MailChimpList( api_key=self.TEST_API_KEY, list_id=self.TEST_LIST_ID, synchronize=True )
         l.save()
         return l
+    
+    def createDataSourceSelector(self):
+        DataSourceSelector.objects.all().delete()
+        ds = DataSourceSelector(
+            name='Embargo date end start_date',
+            filter='I',
+            field='embargo_date',
+            match='gt',
+            value='%(start_date)s',
+            type='str'
+        )
+        ds.save()
+        return ds
     
     def createNewMailer(self):
         Mailer.objects.all().delete()
@@ -231,4 +244,32 @@ class MailerTestCase(TestCase):
         nlt.save()
         self.assertEquals(nlt.__unicode__(), 'NewsletterType Test')
     
+    def test_schedule(self):
+        l = self._valid_list()
+        m = self.createNewMailer()
+        p1 = self.createNewMailerParameterListId(m)
+        p2 = self.createNewMailerParameterEnable_browser_link(m)
+        nlt = self.createNewsletterType()
+        nl = self.createNewsletter(nlt)
+        # print nl._schedule(1)
+        # self.assertEquals(m.send_test(nl), None)
+
+    def test_get_absolute_url_newsletter(self):
+        l = self._valid_list()
+        m = self.createNewMailer()
+        p1 = self.createNewMailerParameterListId(m)
+        p2 = self.createNewMailerParameterEnable_browser_link(m)
+        nlt = self.createNewsletterType()
+        nl = self.createNewsletter(nlt)
+        self.assertEquals(nl.get_absolute_url(), '/newsletters/slug-test/html/1/')
     
+    def test_get_feed_data(self):
+        ds = self.createDataSourceSelector()
+        lan = self.createLanguage()
+        l = self._valid_list()
+        m = self.createNewMailer()
+        p1 = self.createNewMailerParameterListId(m)
+        p2 = self.createNewMailerParameterEnable_browser_link(m)
+        nlt = self.createNewsletterType()
+        nl = self.createNewsletter(nlt)
+        self.assertEquals(nl.get_feed_data(), {})

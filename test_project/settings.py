@@ -227,4 +227,3 @@ CELERY_RESULT_EXPIRES = 3600
 CELERY_WORKER_STATE_DB = os.path.join(TMP_DIR, 'celery_states')
 CELERY_BEAT_SCHEDULE_FILENAME = os.path.join(TMP_DIR, 'celerybeat_schedule')
 
-NEWSLETTERS_MAILCHIMP_APIKEY = '78ce5b4dfc49245cacd9fa255acf14d0'
