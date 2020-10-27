@@ -53,38 +53,23 @@ git+https://@github.com/djangoplicity/djangoplicity.git@develop
 ```
 Celery is also required for some asynchronous tasks to work.
 
-Now include the package in your `[INSTALLED_APPS]`:
+Now include the package in your [INSTALLED_APPS]
 [INSTALLED_APPS]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L83
 
-<!-- ```python
-INSTALLED_APPS = [
-    ...,
-    'djangoplicity.actions',
-    'djangoplicity.admincomments',
-    'djangoplicity.archives.contrib.security',
-    'djangoplicity.archives',
-    'djangoplicity.metadata',
-    'djangoplicity.mailinglists',
-    'djangoplicity.newsletters',
-    'djangoplicity.reports',
-    'django_mailman',
-    'tinymce'
-]
-``` -->
 
-Djangoplicity requires some additional settings in order to work, so add this configuration to your `[settings.py]` 
-file (you don't have to include those files in your assets):
+Djangoplicity requires some additional settings in order to work, so add this configuration to your [settings.py] 
+file (you don't have to include those files in your assets)
 [settings.py]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L199
 
 
-You also have to add `[tinymce]` settings:
+You also have to add [tinymce] settings
 [tinymce]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L219
 
 
-Now, add the following imports to your `[CELERY_IMPORTS]` variable. You can create it if you don't have one, just be sure that you have properly configured Celery for the project.
+Now, add the following imports to your [CELERY_IMPORTS] variable. You can create it if you don't have one, just be sure that you have properly configured Celery for the project.
 [CELERY_IMPORTS]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L249
 
-Next, you have to register the models in your `[admin.py]` file.
+Next, you have to register the models in your [admin.py] file.
 [admin.py]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/admin.py
 
 ### Migrations
