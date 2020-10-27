@@ -53,24 +53,19 @@ git+https://@github.com/djangoplicity/djangoplicity.git@develop
 ```
 Celery is also required for some asynchronous tasks to work.
 
-Now include the package in your [INSTALLED_APPS]
-[INSTALLED_APPS]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L83
+Now include the package in your [INSTALLED_APPS](https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L83)
 
 
-Djangoplicity requires some additional settings in order to work, so add this configuration to your [settings.py] 
+Djangoplicity requires some additional settings in order to work, so add this configuration to your [settings.py](https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L199)
 file (you don't have to include those files in your assets)
-[settings.py]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L199
 
 
-You also have to add [tinymce] settings
-[tinymce]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L219
+You also have to add [tinymce](https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L219) settings
 
 
-Now, add the following imports to your [CELERY_IMPORTS] variable. You can create it if you don't have one, just be sure that you have properly configured Celery for the project.
-[CELERY_IMPORTS]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L249
+Now, add the following imports to your [CELERY_IMPORTS](https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L249) variable. You can create it if you don't have one, just be sure that you have properly configured Celery for the project.
 
-Next, you have to register the models in your [admin.py] file.
-[admin.py]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/admin.py
+Next, you have to register the models in your [admin.py](https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/admin.py) file.
 
 ### Migrations
 
