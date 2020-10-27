@@ -53,9 +53,10 @@ git+https://@github.com/djangoplicity/djangoplicity.git@develop
 ```
 Celery is also required for some asynchronous tasks to work.
 
-Now include the package in your `INSTALLED_APPS`:
+Now include the package in your `[INSTALLED_APPS]`:
+[INSTALLED_APPS]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L83
 
-```python
+<!-- ```python
 INSTALLED_APPS = [
     ...,
     'djangoplicity.actions',
@@ -69,103 +70,22 @@ INSTALLED_APPS = [
     'django_mailman',
     'tinymce'
 ]
-```
+``` -->
 
-Djangoplicity requires some additional settings in order to work, so add this configuration to your `settings.py` 
+Djangoplicity requires some additional settings in order to work, so add this configuration to your `[settings.py]` 
 file (you don't have to include those files in your assets):
+[settings.py]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L199
 
-```python
-##############
-# JavaScript #
-##############
-JQUERY_JS = "jquery/jquery-1.11.1.min.js"
-JQUERY_UI_JS = "jquery-ui-1.12.1/jquery-ui.min.js"
-JQUERY_UI_CSS = "jquery-ui-1.12.1/jquery-ui.min.css"
-DJANGOPLICITY_ADMIN_CSS = "djangoplicity/css/admin.css"
-DJANGOPLICITY_ADMIN_JS = "djangoplicity/js/admin.js"
-SUBJECT_CATEGORY_CSS = "djangoplicity/css/widgets.css"
 
-NEWSLETTERS_ARCHIVE_ROOT = 'archives/newsletters/'
+You also have to add `[tinymce]` settings:
+[tinymce]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L219
 
-ENABLE_ADVANCED_SEARCH = True
-ADV_SEARCH_START_YEAR = 1998
-```
 
-You also have to add `tinymce` settings:
-```python
-TINYMCE_DEFAULT_CONFIG = {
-    'height': 360,
-    'width': 1120,
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 20,
-    'selector': 'textarea',
-    'theme': 'modern',
-    'plugins': '''
-        textcolor save link image media preview codesample table
-        code lists fullscreen  insertdatetime  nonbreaking contextmenu
-        directionality searchreplace wordcount visualblocks visualchars
-        code fullscreen autolink lists  charmap print  hr anchor pagebreak
-    ''',
-    'toolbar1': '''
-        fullscreen code | cut copy | searchreplace | alignleft aligncenter alignright alignjustify | formatselect forecolor backcolor | superscript subscript |
-     ''',
-    'toolbar2': '''
-        bold italic underline strikethrough | bullist numlist table hr | indent outdent | undo redo | link unlink anchor image media charmap | nonbreaking |
-    ''',
-    'contextmenu': 'formats | link image',
-    'menubar': False,
-    'statusbar': True,
-    'entity_encoding': 'raw',
-    'convert_urls': False,
-}
-```
+Now, add the following imports to your `[CELERY_IMPORTS]` variable. You can create it if you don't have one, just be sure that you have properly configured Celery for the project.
+[CELERY_IMPORTS]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L249
 
-Now, add the following imports to your `CELERY_IMPORTS` variable. You can create it if you don't have one, just be sure that you have properly configured Celery for the project.
-```python
-CELERY_IMPORTS = [
-    "djangoplicity.archives.contrib.security.tasks",
-    "djangoplicity.celery.tasks",
-]
-```
-
-Next, you have to register the models in your `admin.py` file.
-```python
-import django.contrib.auth.admin
-import django.contrib.redirects.admin
-import django.contrib.sites.admin
-import djangoplicity.actions.admin
-from djangoplicity.contrib.admin.discover import autoregister
-from djangoplicity.contrib.admin.sites import AdminSite
-
-import djangoplicity.mailinglists.admin
-import djangoplicity.newsletters.admin
-
-# Register each applications admin interfaces with
-# an admin site.
-admin_site = AdminSite(name="admin_site")
-adminlogs_site = AdminSite(name="adminlogs_site")
-adminshop_site = AdminSite(name="adminshop_site")
-
-autoregister(admin_site, django.contrib.auth.admin)
-autoregister(admin_site, django.contrib.sites.admin)
-
-autoregister(admin_site, djangoplicity.mailinglists.admin)
-autoregister(admin_site, djangoplicity.newsletters.admin)
-autoregister(adminlogs_site, djangoplicity.actions.admin)
-
-#
-# Applications that does not support above method.
-#
-djangoplicity.reports.admin.advanced_register_with_admin(admin_site)
-
-adminlogs_site.register(django.contrib.redirects.models.Redirect, django.contrib.redirects.admin.RedirectAdmin)
-
-adminlogs_site.register(django.contrib.sites.models.Site, django.contrib.sites.admin.SiteAdmin)
-
-admin_site.register(django.contrib.auth.models.User, django.contrib.auth.admin.UserAdmin)
-
-admin_site.register(django.contrib.auth.models.Group, django.contrib.auth.admin.GroupAdmin)
-```
+Next, you have to register the models in your `[admin.py]` file.
+[admin.py]: https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/admin.py
 
 ### Migrations
 
