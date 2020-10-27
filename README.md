@@ -191,16 +191,21 @@ In your terminal run the command:
 git clone https://gitlab.com/djangoplicity/djangoplicity-newsletters.git
 ````
 
+## Configuration api key mailchimp
+
+In the folder test_project you have a file named .env.example, this file serve to declare environment variables api key and list id of mailchimp.
+Remove the extension .example of this file and configure your `NEWSLETTERS_MAILCHIMP_API_KEY` and `NEWSLETTERS_MAILCHIMP_LIST_ID` variables of mailchimp.
+
 ### Running the project
 
-All the configuration to start the project is present in the docker-compose files and Dockerfile,
+All the configuration to start the project is present in the docker-compose files, Dockerfile and .env previously configured,
 then at this point a single command is required to download all the dependencies and run the project:
 
 ```` 
-docker-compose up
+docker-compose --env-file ./test_project/.env up
 ````
 
-> The previous command reads the config from docker-compose.yml. 
+> The previous command reads the config from docker-compose.yml and .env file. 
 
 When the process finishes, the server will be available at *`localhost:8002`*
 
@@ -209,7 +214,7 @@ To stop containers press `CTRL + C` in Windows or `⌘ + C` in MacOS
 If the dependencies change, you should recreate the docker images and start the containers again with this command:
 
 ```` 
-docker-compose up --build
+docker-compose --env-file ./test_project/.env up --build
 ````
 
 ### Additional commands
