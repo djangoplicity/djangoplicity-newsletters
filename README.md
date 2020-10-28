@@ -17,11 +17,12 @@ created by the European Southern Observatory (ESO) for managing Newsletters, Mai
 
 ## Installation
 
-If you are using Docker, you can look for an example in `Dockerfile` and `docker-compose.yml` files located in the root
+If you are using Docker, you can look for an example in [Dockerfile](Dockerfile) and [docker-compose.yml](docker-compose.yml) files located in the root
 of the repository.
+
 ### Requirements
 
-Djangoplicity Newsletters actually supports Python 2.7 and Python 3+.
+Djangoplicity Newsletters currently supports Python 2.7 and Python 3+.
 
 You must install Djangoplicity Newsletters using the Github repository, so add the following packages to your
 requirements depending on the Python version you are using.
@@ -55,13 +56,10 @@ Celery is also required for some asynchronous tasks to work.
 
 Now include the package in your [INSTALLED_APPS](https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L83)
 
-
 Djangoplicity requires some additional settings in order to work, so add this configuration to your [settings.py](https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L199)
 file (you don't have to include those files in your assets)
 
-
 You also have to add [tinymce](https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L219) settings
-
 
 Now, add the following imports to your [CELERY_IMPORTS](https://github.com/djangoplicity/djangoplicity-newsletters/blob/develop/test_project/settings.py#L249) variable. You can create it if you don't have one, just be sure that you have properly configured Celery for the project.
 
@@ -80,7 +78,7 @@ python manage.py migrate
 
 ## Development
 
-This repository includes an example project for local development located in the test_project folder. You can find
+This repository includes an example project for local development located in the [test_project](test_project) folder. You can find
 there the basic configuration to get a project working.
  
 ### Cloning the repository
@@ -93,12 +91,12 @@ git clone https://gitlab.com/djangoplicity/djangoplicity-newsletters.git
 
 ## Mailchimp API Key Configuration
 
-In the folder test_project you have a file named .env.example, this file serve to declare environment variables api key and list id of mailchimp.
-Remove the extension .example of this file and configure your `NEWSLETTERS_MAILCHIMP_API_KEY` and `NEWSLETTERS_MAILCHIMP_LIST_ID` variables of mailchimp.
+In the folder test_project you have a file named .env.example, this file serve to declare the environment variables API Key and List ID of Mailchimp.
+Remove the extension .example of this file and configure your `NEWSLETTERS_MAILCHIMP_API_KEY` and `NEWSLETTERS_MAILCHIMP_LIST_ID` variables of Mailchimp.
 
 ### Running the project
 
-All the configuration to start the project is present in the docker-compose files, Dockerfile and .env previously configured,
+All the configuration to start the project is present in the docker-compose.yml, Dockerfile and .env previously configured,
 then at this point a single command is required to download all the dependencies and run the project:
 
 ```` 
