@@ -45,7 +45,7 @@ from django.shortcuts import get_object_or_404, render
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
 import django
-if django.VERSION >= (2, 2):
+if django.VERSION >= (2, 0):
     from django.urls import reverse
 else:
     from django.core.urlresolvers import reverse

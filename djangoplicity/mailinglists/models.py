@@ -57,7 +57,7 @@ from django.utils.encoding import smart_text
 from djangoplicity.actions.models import EventAction  # pylint: disable=no-name-in-module
 from djangoplicity.mailinglists.mailman import MailmanList
 import django
-if django.VERSION >= (2, 2):
+if django.VERSION >= (2, 0):
     from django.urls import reverse
 else:
     from django.core.urlresolvers import reverse

@@ -42,7 +42,7 @@ from django.utils.encoding import smart_text
 from urllib.parse import urlencode
 from djangoplicity.mailinglists.models import MailChimpList, MailChimpListToken
 import django
-if django.VERSION >= (2, 2):
+if django.VERSION >= (2, 0):
     from django.urls import reverse
 else:
     from django.core.urlresolvers import reverse
