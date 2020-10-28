@@ -91,7 +91,7 @@ In your terminal run the command:
 git clone https://gitlab.com/djangoplicity/djangoplicity-newsletters.git
 ````
 
-## Configuration api key mailchimp
+## Mailchimp API Key Configuration
 
 In the folder test_project you have a file named .env.example, this file serve to declare environment variables api key and list id of mailchimp.
 Remove the extension .example of this file and configure your `NEWSLETTERS_MAILCHIMP_API_KEY` and `NEWSLETTERS_MAILCHIMP_LIST_ID` variables of mailchimp.
