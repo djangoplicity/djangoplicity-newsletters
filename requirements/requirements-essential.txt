@@ -1,4 +1,4 @@
-Django==1.11.21
+Django==2.2
 setuptools
 certifi
 #django-mailman == 0.4+eso1
@@ -11,7 +11,7 @@ psycopg2-binary==2.8.5
 celery==4.4.7
 
 # Djangoplicity actions
-git+https://@github.com/djangoplicity/djangoplicity-actions@develop
+git+https://@github.com/djangoplicity/djangoplicity-actions@release/python3
 
 # Django mailman
 git+https://@github.com/jelko/django-mailman@master
