@@ -374,6 +374,9 @@ class NewsletterAdmin( dpadmin.DjangoplicityModelAdmin, NewsletterDisplaysAdmin,
         opts = self.model._meta
 
         media = self.media
+        print('lol')
+        print(media)
+        print('lol')
         if 'adminform' in context:
             media += context['adminform']
 
