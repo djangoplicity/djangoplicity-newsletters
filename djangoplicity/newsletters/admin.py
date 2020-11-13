@@ -374,9 +374,13 @@ class NewsletterAdmin( dpadmin.DjangoplicityModelAdmin, NewsletterDisplaysAdmin,
         opts = self.model._meta
 
         media = self.media
-        print('lol')
-        print(media)
-        print('lol')
+        
+        if hasattr(context['adminform'], '_css_lists') is False:
+            setattr(context['adminform'], '_css_lists', [])
+        
+        if hasattr(context['adminform'], '_js_lists') is False:
+            setattr(context['adminform'], '_js_lists', [])
+
         if 'adminform' in context:
             media += context['adminform']
 
