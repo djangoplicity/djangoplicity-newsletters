@@ -24,9 +24,16 @@ urlpatterns = [
     url(r'^admin/', admin_site.urls, {'extra_context': {'ADMIN_SITE': True}}),
     url(r'^admin/system/', adminlogs_site.urls, {'extra_context': {'ADMINLOGS_SITE': True}}),
     url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^newsletters/',include(('djangoplicity.mailinglists.urls','djangoplicity_mailinglists'))),
-    url(r'^newsletters/',
+    url(
+        r'^newsletters/',
+        include(
+            ('djangoplicity.mailinglists.urls', 'djangoplicity_mailinglists',),
+            namespace='djangoplicity_mailinglists'
+        )
+    ),
+    url(
+        r'^newsletters/',
         include('djangoplicity.newsletters.urls'),
         {'model': Newsletter, 'options': NewsletterOptions, }
-        ),
+    ),
 ]
