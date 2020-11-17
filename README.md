@@ -86,7 +86,7 @@ there the basic configuration to get a project working.
 In your terminal run the command:
 
 ```` 
-git clone https://gitlab.com/djangoplicity/djangoplicity-newsletters.git
+git clone https://github.com/djangoplicity/djangoplicity-newsletters.git
 ````
 
 ## Mailchimp API Key Configuration
@@ -107,7 +107,7 @@ docker-compose --env-file ./test_project/.env up
 
 When the process finishes, the server will be available at *`localhost:8002`*
 
-To stop containers press `CTRL + C` in Windows or `⌘ + C` in MacOS
+To stop containers press `CTRL + C` or run `docker-compose down`.
 
 If the dependencies change, you should recreate the docker images and start the containers again with this command:
 
