@@ -375,14 +375,8 @@ class NewsletterAdmin( dpadmin.DjangoplicityModelAdmin, NewsletterDisplaysAdmin,
 
         media = self.media
         
-        if hasattr(context['adminform'], '_css_lists') is False:
-            setattr(context['adminform'], '_css_lists', [])
-        
-        if hasattr(context['adminform'], '_js_lists') is False:
-            setattr(context['adminform'], '_js_lists', [])
-
         if 'adminform' in context:
-            media += context['adminform']
+            media += context['adminform'].media
 
         defaults = {
             'app_label': opts.app_label,
