@@ -905,6 +905,9 @@ class GroupMapping(models.Model):
                     val = field()
                 else:
                     val = field
+            else:
+                # The field is not in the changes, then we return an empty dict, otherwise the groupings would be compared to a None val
+                return {}
         except AttributeError:
             pass
 
