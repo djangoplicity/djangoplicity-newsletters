@@ -237,7 +237,7 @@ def mailchimp_webhook(request, require_secure=False):
     user_agent = request.META.get('HTTP_USER_AGENT', '')
     if user_agent == 'MailChimp.com WebHook Validator':
         return HttpResponse('')
-    if user_agent != 'MailChimp.com':
+    if user_agent != 'MailChimp.com' and user_agent != 'MailChimp':
         logger.error('[Webhook] User-agent not MailChimp.com - was %s',
             user_agent)
         return HttpResponse('')
