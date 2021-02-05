@@ -1098,12 +1098,12 @@ class MailChimpListToken(models.Model):
 # contacts are added/removed from groups (e.g subscribe to mailman).
 #
 ACTION_EVENTS = (
-    ('on_subscribe', 'On subscribe'),
-    ('on_unsubscribe', 'On unsubscribe'),
-    ('on_upemail', 'On update email'),
-    ('on_profile', 'On profile update'),
-    ('on_cleaned', 'On cleaned'),
-    ('on_campaign', 'On campaign'),
+    ('on_subscribe', 'on_subscribe'),
+    ('on_unsubscribe', 'on_unsubscribe'),
+    ('on_upemail', 'on_upemail'),
+    ('on_profile', 'on_profile'),
+    ('on_cleaned', 'on_cleaned'),
+    ('on_campaign', 'on_campaign'),
 )
 
 
@@ -1114,7 +1114,7 @@ class MailChimpEventAction(EventAction):
     '''
     def __init__(self, *args, **kwargs):
         super(MailChimpEventAction, self).__init__(*args, **kwargs)
-        self._meta.get_field('on_event')._choices = ACTION_EVENTS
+        self._meta.get_field('on_event').choices = ACTION_EVENTS
 
     model_object = models.ForeignKey(MailChimpList)
 
