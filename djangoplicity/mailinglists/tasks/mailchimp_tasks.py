@@ -119,7 +119,7 @@ def mailchimp_subscribe(list_pk=None, fired_at=None, params=None, ip=None,
         if obj:
             kwargs['model_identifier'], kwargs['pk'] = _object_identifier(obj)
 
-        for a in MailChimpEventAction.get_actions(list_pk, on_event='on_subscribed'):
+        for a in MailChimpEventAction.get_actions(list_pk, on_event='on_subscribe'):
             a.dispatch(**keys2str(kwargs))
 
 
