@@ -897,7 +897,7 @@ class GroupMapping(models.Model):
         in the group
         '''
         val = None
-        print(changes)
+
         try:
             if changes is None or (changes is not None and self.field in changes):
                 field = getattr(obj, self.field)
@@ -905,9 +905,9 @@ class GroupMapping(models.Model):
                     val = field()
                 else:
                     val = field
-            # else:
+            else:
                 # The field is not in the changes, then we return an empty dict, otherwise the groupings would be compared to a None val
-            #    return {}
+                return {}
         except AttributeError:
             pass
 
