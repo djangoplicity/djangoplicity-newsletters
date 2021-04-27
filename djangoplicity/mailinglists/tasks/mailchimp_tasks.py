@@ -118,6 +118,8 @@ def mailchimp_subscribe(list_pk=None, fired_at=None, params=None, ip=None,
         kwargs = mlist.parse_merge_fields(params['merges'])
         if obj:
             kwargs['model_identifier'], kwargs['pk'] = _object_identifier(obj)
+        else:
+            kwargs['email'] = email
 
         for a in MailChimpEventAction.get_actions(list_pk, on_event='on_subscribe'):
             a.dispatch(**keys2str(kwargs))
