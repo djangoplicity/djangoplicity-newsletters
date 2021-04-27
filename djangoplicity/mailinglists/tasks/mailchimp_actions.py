@@ -106,6 +106,11 @@ class MailChimpSubscribeAction(MailChimpAction):
                     'MailChimp list %s: no email address' % (obj.id, mlist.name))
                 return
 
+            if obj.email.lower().endswith('-invalid'):
+                self.get_logger().info('Can\'t subscribe contact %d to '
+                    'MailChimp list %s: [%s] isn\'t a valid email address' % (obj.id, mlist.name, obj.email))
+                return
+
             mlist.subscribe(
                 obj.email,
                 merge_fields=merge_fields,
