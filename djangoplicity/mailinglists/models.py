@@ -519,7 +519,7 @@ class MailChimpList(models.Model):
                 self.list_id,
                 email_hash,
             )
-            # If we get a response then subscriber already exists but don't have DPID update this value
+            # If we get a response then the subscriber already exists but if don't have DPID update it this field
             if ('merge_fields' in result) and ('DPID' in result['merge_fields']) and (result['merge_fields']['DPID'] == ''):
                 self.connection(
                     'lists.members.update',
