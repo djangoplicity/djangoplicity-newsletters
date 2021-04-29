@@ -427,7 +427,7 @@ class MailChimpList(models.Model):
             for m in MergeVarMapping.objects.filter(list=self).select_related(
                 'list', 'merge_var'):
                 (tag, val) = m.create_merge_field(obj, changes=changes)
-                if val and tag != self.primary_key_field.tag:
+                if val   and tag != self.primary_key_field.tag:
                     merge_fields[tag] = val
 
             interests = {}
@@ -514,12 +514,20 @@ class MailChimpList(models.Model):
         email_hash = hashlib.md5(str(email).encode("utf-8")).hexdigest()
         logger.debug('Will run lists.members.get for email "%s"', email)
         try:
-            self.connection(
+            result = self.connection(
                 'lists.members.get',
                 self.list_id,
                 email_hash,
             )
-            # If we get a response then subscriber already exists
+            # If we get a response then subscriber already exists but don't have DPID update this value
+            if ('merge_fields' in result) and ('DPID' in result['merge_fields']) and (result['merge_fields']['DPID'] == ''):
+                self.connection(
+                  'lists.members.update',
+                  self.list_id, email_hash, {
+                      'merge_fields': merge_fields,
+                      'interests': interests,
+                  },
+              )
             return True
         except MailChimpError as e:
             if e.args[0]['status'] != 404:
