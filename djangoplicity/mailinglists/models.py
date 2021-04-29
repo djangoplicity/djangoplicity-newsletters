@@ -522,12 +522,12 @@ class MailChimpList(models.Model):
             # If we get a response then subscriber already exists but don't have DPID update this value
             if ('merge_fields' in result) and ('DPID' in result['merge_fields']) and (result['merge_fields']['DPID'] == ''):
                 self.connection(
-                  'lists.members.update',
-                  self.list_id, email_hash, {
-                      'merge_fields': merge_fields,
-                      'interests': interests,
-                  },
-              )
+                    'lists.members.update',
+                    self.list_id,
+                    email_hash, {
+                        'merge_fields': merge_fields,
+                        'interests': interests,                    }
+                )
             return True
         except MailChimpError as e:
             if e.args[0]['status'] != 404:
