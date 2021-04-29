@@ -514,12 +514,23 @@ class MailChimpList(models.Model):
         email_hash = hashlib.md5(str(email).encode("utf-8")).hexdigest()
         logger.debug('Will run lists.members.get for email "%s"', email)
         try:
-            self.connection(
+            result = self.connection(
                 'lists.members.get',
                 self.list_id,
                 email_hash,
             )
-            # If we get a response then subscriber already exists
+            if self.primary_key_field:
+                tag = self.primary_key_field.tag
+                # If we get a response then the subscriber already exists but if don't have DPID update it this field
+                if ('merge_fields' in result) and (tag in result['merge_fields']) and (result['merge_fields'][tag] == ''):
+                    self.connection(
+                        'lists.members.update',
+                        self.list_id,
+                        email_hash, {
+                            'merge_fields': merge_fields,
+                            'interests': interests,
+                        }
+                )
             return True
         except MailChimpError as e:
             if e.args[0]['status'] != 404:
