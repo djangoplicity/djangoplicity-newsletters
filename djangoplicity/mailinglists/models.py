@@ -427,7 +427,7 @@ class MailChimpList(models.Model):
             for m in MergeVarMapping.objects.filter(list=self).select_related(
                 'list', 'merge_var'):
                 (tag, val) = m.create_merge_field(obj, changes=changes)
-                if val   and tag != self.primary_key_field.tag:
+                if val and tag != self.primary_key_field.tag:
                     merge_fields[tag] = val
 
             interests = {}
@@ -526,7 +526,8 @@ class MailChimpList(models.Model):
                     self.list_id,
                     email_hash, {
                         'merge_fields': merge_fields,
-                        'interests': interests,                    }
+                        'interests': interests,
+                    }
                 )
             return True
         except MailChimpError as e:
