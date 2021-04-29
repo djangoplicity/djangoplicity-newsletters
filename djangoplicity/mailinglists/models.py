@@ -519,16 +519,17 @@ class MailChimpList(models.Model):
                 self.list_id,
                 email_hash,
             )
-            tag = self.primary_key_field.tag
-            # If we get a response then the subscriber already exists but if don't have DPID update it this field
-            if ('merge_fields' in result) and (tag in result['merge_fields']) and (result['merge_fields'][tag] == ''):
-                self.connection(
-                    'lists.members.update',
-                    self.list_id,
-                    email_hash, {
-                        'merge_fields': merge_fields,
-                        'interests': interests,
-                    }
+            if self.primary_key_field:
+                tag = self.primary_key_field.tag
+                # If we get a response then the subscriber already exists but if don't have DPID update it this field
+                if ('merge_fields' in result) and (tag in result['merge_fields']) and (result['merge_fields'][tag] == ''):
+                    self.connection(
+                        'lists.members.update',
+                        self.list_id,
+                        email_hash, {
+                            'merge_fields': merge_fields,
+                            'interests': interests,
+                        }
                 )
             return True
         except MailChimpError as e:
