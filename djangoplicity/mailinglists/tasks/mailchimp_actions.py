@@ -33,6 +33,8 @@ from django.apps import apps
 from django.db import models
 from django.db.models.fields import FieldDoesNotExist
 from django.utils.encoding import smart_unicode
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 from djangoplicity.actions.plugins import ActionPlugin  # pylint: disable=E0611
 
@@ -79,6 +81,19 @@ class MailChimpAction(ActionPlugin):
     def _get_list(self, list_id):
         from djangoplicity.mailinglists.models import MailChimpList
         return MailChimpList.objects.get(list_id=list_id)
+
+    def _is_email_valid(self, email):
+        """
+        Validate and Catch email validation
+        """
+        if email.lower().endswith('-invalid'):
+            return False
+        try:
+            validate_email(email)
+            return True
+        except ValidationError:
+            return False
+        return False
 
 
 class MailChimpSubscribeAction(MailChimpAction):
@@ -200,26 +215,32 @@ class MailChimpUpdateAction(MailChimpAction):
             before = before.strip()
             after = after.strip()
             if before != after:
-                if before == '':
-                    # No email before, so wasn't subscribed.
+                if self._is_email_valid(before) == False and self._is_email_valid(after) == False:
+                    # before and after emails aren't a valid
+                    self.get_logger().info("The profile of subscriber wasn't update because it isn't have a valid email: '%s'" % (obj.email))
+                elif self._is_email_valid(before) == False and self._is_email_valid(after):
+                    # No email before or isn't valid, so wasn't subscribed and after is a valid email
                     merge_fields = list.create_merge_fields(obj)
                     list.subscribe(after, merge_fields=merge_fields, double_optin=conf['double_optin'], send_welcome=conf['send_welcome'], async=False)
                     self.get_logger().info("Subscribed email address '%s' to MailChimp list %s" % (after, list.name))
-                else:
-                    if after.strip() == '':
-                        # Unsubscribe email, since new email is empty
-                        list.unsubscribe(before, delete_member=conf['delete_member'], send_goodbye=conf['send_goodbye'], async=False)
-                        self.get_logger().info("Unsubscribed email address '%s' from MailChimp list %s" % (before, list.name))
-                    else:
-
-                        merge_fields = list.create_merge_fields(obj, changes=changes)
-                        list.update_profile(before, after, merge_fields=merge_fields, async=False)
-                        self.get_logger().info("Changed email address from '%s' to '%s' on MailChimp list %s" % (before, after, list.name))
+                elif self._is_email_valid(before) and self._is_email_valid(after) == False:
+                    # Unsubscribe email, since new email is empty or invalid
+                    list.unsubscribe(before, delete_member=conf['delete_member'], send_goodbye=conf['send_goodbye'], async=False)
+                    self.get_logger().info("Unsubscribed email address '%s' from MailChimp list %s" % (before, list.name))
+                elif self._is_email_valid(before) and self._is_email_valid(after):
+                    # Updated email address of subscriber
+                    merge_fields = list.create_merge_fields(obj, changes=changes)
+                    list.update_profile(before, after, merge_fields=merge_fields, async=False)
+                    self.get_logger().info("Changed email address from '%s' to '%s' on MailChimp list %s" % (before, after, list.name))
             else:
-                # Email was not updated - other parts was changed
-                merge_fields = list.create_merge_fields(obj, changes=changes)
-                list.update_profile(obj.email, obj.email, merge_fields=merge_fields, async=False)
-                self.get_logger().info("Updated profile of subscriber with email address '%s' on MailChimp list %s" % (obj.email, list.name))
+                if self._is_email_valid(before):
+                    # if email is valid and was not updated - other parts was changed
+                    merge_fields = list.create_merge_fields(obj, changes=changes)
+                    list.update_profile(obj.email, obj.email, merge_fields=merge_fields, async=False)
+                    self.get_logger().info("Updated profile of subscriber with email address '%s' on MailChimp list %s" % (obj.email, list.name))
+                else:
+                    # Other fields was change but the subscriber wasn't a valid email
+                    self.get_logger().info("The profile of subscriber wasn't update because it isn't have a valid email: '%s'" % (obj.email))
 
 
 MailChimpSubscribeAction.register()
