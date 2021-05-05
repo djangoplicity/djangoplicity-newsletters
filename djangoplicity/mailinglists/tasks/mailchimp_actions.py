@@ -215,10 +215,7 @@ class MailChimpUpdateAction(MailChimpAction):
             before = before.strip()
             after = after.strip()
             if before != after:
-                if self._is_email_valid(before) == False and self._is_email_valid(after) == False:
-                    # before and after emails aren't a valid
-                    self.get_logger().info("The profile of subscriber wasn't update because it isn't have a valid email: '%s'" % (obj.email))
-                elif self._is_email_valid(before) == False and self._is_email_valid(after):
+                if self._is_email_valid(before) == False and self._is_email_valid(after):
                     # No email before or isn't valid, so wasn't subscribed and after is a valid email
                     merge_fields = list.create_merge_fields(obj)
                     list.subscribe(after, merge_fields=merge_fields, double_optin=conf['double_optin'], send_welcome=conf['send_welcome'], async=False)
@@ -232,6 +229,9 @@ class MailChimpUpdateAction(MailChimpAction):
                     merge_fields = list.create_merge_fields(obj, changes=changes)
                     list.update_profile(before, after, merge_fields=merge_fields, async=False)
                     self.get_logger().info("Changed email address from '%s' to '%s' on MailChimp list %s" % (before, after, list.name))
+                else:
+                    # before and after emails aren't a valid
+                    self.get_logger().info("The profile of subscriber wasn't update because it isn't have a valid email: '%s'" % (obj.email))
             else:
                 if self._is_email_valid(before):
                     # if email is valid and was not updated - other parts was changed
