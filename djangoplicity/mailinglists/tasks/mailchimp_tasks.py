@@ -229,6 +229,7 @@ def mailchimp_profile(list_pk=None, fired_at=None, params=None, ip=None,
     obj = mlist.get_object_from_mergefields(params['merges'])
     kwargs = mlist.parse_merge_fields(params['merges'])
     kwargs['model_identifier'], kwargs['pk'] = _object_identifier(obj)
+    mlist.remove_mailchimp_groups_from_contact(obj)
 
     for a in MailChimpEventAction.get_actions(list_pk, on_event='on_profile'):
         a.dispatch(**keys2str(kwargs))

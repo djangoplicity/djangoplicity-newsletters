@@ -381,6 +381,28 @@ class MailChimpList(models.Model):
         '''
         return MailChimpMergeVar.objects.filter(list=self).order_by('order')
 
+    def get_mailchimpgrouping_list(self, group_id=None):
+        '''
+        Get all mailchimp grouping for this list
+        '''
+        if group_id:
+            groups = self.mailchimpgrouping_set.filter(group_id=group_id)
+        else:
+            groups = self.mailchimpgrouping_set.all()
+        return [r.option for r in groups]
+
+    def remove_mailchimp_groups_from_contact(self, contact):
+        '''
+        Remove mailchimp groupings to one contact
+        '''
+        if isinstance(contact, models.Model):
+            try:
+                rm_groups = contact.groups.filter(name__in=self.get_mailchimpgrouping_list())
+                for g in rm_groups:
+                    contact.groups.remove(g)
+            except:
+                pass
+
     def parse_merge_fields(self, params):
         """
         Given MERGE FIELDS parameters, map it to field values.
@@ -923,9 +945,11 @@ class GroupMapping(models.Model):
             pass
 
         interests = {}
-        for interest in MailChimpGrouping.objects.filter(
-                group_id=self.group.group_id):
-            interests[interest.interest_id] = interest.option == val
+        for interest in MailChimpGrouping.objects.filter(group_id=self.group.group_id):
+            if isinstance(val, list):
+                interests[interest.interest_id] = interest.option in val
+            else:
+                interests[interest.interest_id] = interest.option == val
 
         return interests
 
@@ -1007,6 +1031,13 @@ class MergeVarMapping(models.Model):
                 if isinstance(val['country'], models.Model):
                     try:
                         val['country'] = val['country'].iso_code
+                    except AttributeError:
+                        pass
+
+                # Region (djanplicity model) -> state (mailchimp text)
+                if isinstance(val['state'], models.Model):
+                    try:
+                        val['state'] = val['state'].name
                     except AttributeError:
                         pass
         else:
