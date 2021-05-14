@@ -1009,6 +1009,13 @@ class MergeVarMapping(models.Model):
                         val['country'] = val['country'].iso_code
                     except AttributeError:
                         pass
+
+                # Region (djanplicity model) -> state (mailchimp text)
+                if isinstance(val['state'], models.Model):
+                    try:
+                        val['state'] = val['state'].name
+                    except AttributeError:
+                        pass
         else:
             try:
                 if changes is None or (changes is not None and self.field in changes):
