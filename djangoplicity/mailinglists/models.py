@@ -923,9 +923,11 @@ class GroupMapping(models.Model):
             pass
 
         interests = {}
-        for interest in MailChimpGrouping.objects.filter(
-                group_id=self.group.group_id):
-            interests[interest.interest_id] = interest.option == val
+        for interest in MailChimpGrouping.objects.filter(group_id=self.group.group_id):
+            if isinstance(val, list):
+                interests[interest.interest_id] = interest.option in val
+            else:
+                interests[interest.interest_id] = interest.option == val
 
         return interests
 
