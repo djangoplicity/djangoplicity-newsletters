@@ -210,7 +210,7 @@ class MailChimpUpdateAction(MailChimpAction):
             try:
                 (before, after) = changes['email']
             except KeyError:
-                (before, after) = '', ''
+                before = after = obj.email
 
             before = before.strip()
             after = after.strip()
