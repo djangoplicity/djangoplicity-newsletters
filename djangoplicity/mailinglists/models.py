@@ -475,9 +475,12 @@ class MailChimpList(models.Model):
     def get_object_from_identifier(self, object_identifier):
         val = self.get_modelpk_from_identifier(object_identifier)
         if val:
-            app_label, model_name, pk = val  # pylint: disable=W0633
-            Model = apps.get_model(app_label, model_name)
-            return Model.objects.get(pk=pk)
+            try:
+                app_label, model_name, pk = val  # pylint: disable=W0633
+                Model = apps.get_model(app_label, model_name)
+                return Model.objects.get(pk=pk)
+            except Model.DoesNotExist:
+                return None
         return None
 
     def get_object_from_mergefields(self, params):
