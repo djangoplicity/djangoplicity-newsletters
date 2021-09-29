@@ -79,6 +79,7 @@ class MailChimpAction(ActionPlugin):
         return Model.objects.get(pk=pk)
 
     def _validate_address(self, merge_fields):
+        # All address parts should be present, otherwise, Mailchimp would return 400 Bad Request
         try:
             address = merge_fields.get('ADDRESS')
             for x, v in address.items():
