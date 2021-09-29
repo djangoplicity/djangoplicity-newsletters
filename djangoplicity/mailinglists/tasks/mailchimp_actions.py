@@ -78,6 +78,19 @@ class MailChimpAction(ActionPlugin):
         Model = apps.get_model(*model_identifier.split("."))
         return Model.objects.get(pk=pk)
 
+    def _validate_address(self, merge_fields):
+        # All address parts should be present, otherwise, Mailchimp would return 400 Bad Request
+        try:
+            address = merge_fields.get('ADDRESS')
+            for x, v in address.items():
+                if not v:
+                    return False
+            return True
+        except AttributeError:
+            return False
+        except KeyError:
+            return False
+
     def _get_list(self, list_id):
         from djangoplicity.mailinglists.models import MailChimpList
         return MailChimpList.objects.get(list_id=list_id)
@@ -125,6 +138,9 @@ class MailChimpSubscribeAction(MailChimpAction):
                 self.get_logger().info('Can\'t subscribe contact %d to '
                     'MailChimp list %s: [%s] isn\'t a valid email address' % (obj.id, mlist.name, obj.email))
                 return
+
+            if 'ADDRESS' in merge_fields and not self._validate_address(merge_fields):
+                merge_fields.pop('ADDRESS')
 
             mlist.subscribe(
                 obj.email,
