@@ -81,12 +81,10 @@ class MailChimpAction(ActionPlugin):
     def _validate_address(self, merge_fields):
         try:
             address = merge_fields.get('ADDRESS')
-            is_valid = True
             for x, v in address.items():
-                is_valid = is_valid and True if v else False
-                if not is_valid:
-                    break
-            return is_valid
+                if not v:
+                    return False
+            return True
         except AttributeError:
             return False
         except KeyError:
