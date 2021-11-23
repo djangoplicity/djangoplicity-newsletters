@@ -381,6 +381,12 @@ class MailChimpList(models.Model):
         '''
         return MailChimpMergeVar.objects.filter(list=self).order_by('order')
 
+    def get_required_merge_fields(self):
+        '''
+        Get all required REQUIRED MERGE FIELDS for this list.
+        '''
+        return MailChimpMergeVar.objects.filter(list=self, required=True).order_by('order')
+
     def get_mailchimpgrouping_list(self, group_id=None):
         '''
         Get all mailchimp grouping for this list
@@ -519,6 +525,11 @@ class MailChimpList(models.Model):
         if email_type not in ['html', 'text', 'mobile']:
             raise Exception('Invalid email type %s - options are html, text, '
                 'or mobile.' % email_type)
+
+        # Check required merge fields otherwise set the default value
+        for k in self.get_required_merge_fields():
+            if k.tag not in merge_fields.keys() and k.default:
+                merge_fields[k.tag] = k.default
 
         # Check merge fields.
         allowed_fields = ['INTERESTS']
