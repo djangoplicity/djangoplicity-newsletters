@@ -652,6 +652,11 @@ class MailChimpList(models.Model):
             raise Exception('Invalid email type %s - options are html, text, '
                 'mobile or <blank>.' % email_type)
 
+        # Check required merge fields otherwise set the default value
+        for k in self.get_required_merge_fields():
+            if k.tag not in merge_fields.keys() and k.default:
+                merge_fields[k.tag] = k.default
+
         # Check merge fields.
         allowed_fields = list(
             self.get_merge_fields().values_list('tag', flat=True)
