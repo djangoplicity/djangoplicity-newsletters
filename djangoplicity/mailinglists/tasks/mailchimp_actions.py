@@ -31,7 +31,7 @@
 
 from django.apps import apps
 from django.db import models
-from django.db.models.fields import FieldDoesNotExist
+from django.core.exceptions import FieldDoesNotExist
 from django.utils.encoding import smart_text
 
 from djangoplicity.actions.plugins import ActionPlugin  # pylint: disable=E0611
