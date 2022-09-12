@@ -395,6 +395,28 @@ class MailChimpList(models.Model):
         '''
         return MailChimpMergeVar.objects.filter(list=self).order_by('order')
 
+    def get_mailchimpgrouping_list(self, group_id=None):
+        '''
+        Get all mailchimp grouping for this list
+        '''
+        if group_id:
+            groups = self.mailchimpgrouping_set.filter(group_id=group_id)
+        else:
+            groups = self.mailchimpgrouping_set.all()
+        return [r.option for r in groups]
+
+    def remove_mailchimp_groups_from_contact(self, contact):
+        '''
+        Remove mailchimp groupings to one contact
+        '''
+        if isinstance(contact, models.Model):
+            try:
+                rm_groups = contact.groups.filter(name__in=self.get_mailchimpgrouping_list())
+                for g in rm_groups:
+                    contact.groups.remove(g)
+            except:
+                pass
+
     def parse_merge_fields(self, params):
         """
         Given MERGE FIELDS parameters, map it to field values.
@@ -467,9 +489,12 @@ class MailChimpList(models.Model):
     def get_object_from_identifier(self, object_identifier):
         val = self.get_modelpk_from_identifier(object_identifier)
         if val:
-            app_label, model_name, pk = val  # pylint: disable=W0633
-            Model = apps.get_model(app_label, model_name)
-            return Model.objects.get(pk=pk)
+            try:
+                app_label, model_name, pk = val  # pylint: disable=W0633
+                Model = apps.get_model(app_label, model_name)
+                return Model.objects.get(pk=pk)
+            except Model.DoesNotExist:
+                return None
         return None
 
     def get_object_from_mergefields(self, params):
@@ -528,12 +553,23 @@ class MailChimpList(models.Model):
         email_hash = hashlib.md5(str(email).encode("utf-8")).hexdigest()
         logger.debug('Will run lists.members.get for email "%s"', email)
         try:
-            self.connection(
+            result = self.connection(
                 'lists.members.get',
                 self.list_id,
                 email_hash,
             )
-            # If we get a response then subscriber already exists
+            if self.primary_key_field:
+                tag = self.primary_key_field.tag
+                # If we get a response then the subscriber already exists but if don't have DPID update it this field
+                if ('merge_fields' in result) and (tag in result['merge_fields']) and (result['merge_fields'][tag] == ''):
+                    self.connection(
+                        'lists.members.update',
+                        self.list_id,
+                        email_hash, {
+                            'merge_fields': merge_fields,
+                            'interests': interests,
+                        }
+                )
             return True
         except MailChimpError as e:
             if e.args[0]['status'] != 404:
@@ -923,13 +959,18 @@ class GroupMapping(models.Model):
                     val = field()
                 else:
                     val = field
+            else:
+                # The field is not in the changes, then we return an empty dict, otherwise the groupings would be compared to a None val
+                return {}
         except AttributeError:
             pass
 
         interests = {}
-        for interest in MailChimpGrouping.objects.filter(
-                group_id=self.group.group_id):
-            interests[interest.interest_id] = interest.option == val
+        for interest in MailChimpGrouping.objects.filter(group_id=self.group.group_id):
+            if isinstance(val, list):
+                interests[interest.interest_id] = interest.option in val
+            else:
+                interests[interest.interest_id] = interest.option == val
 
         return interests
 
@@ -1012,6 +1053,13 @@ class MergeVarMapping(models.Model):
                 if isinstance(val['country'], models.Model):
                     try:
                         val['country'] = val['country'].iso_code
+                    except AttributeError:
+                        pass
+
+                # Region (djanplicity model) -> state (mailchimp text)
+                if isinstance(val['state'], models.Model):
+                    try:
+                        val['state'] = val['state'].name
                     except AttributeError:
                         pass
         else:
@@ -1114,12 +1162,12 @@ class MailChimpListToken(models.Model):
 # contacts are added/removed from groups (e.g subscribe to mailman).
 #
 ACTION_EVENTS = (
-    ('on_subscribe', 'On subscribe'),
-    ('on_unsubscribe', 'On unsubscribe'),
-    ('on_upemail', 'On update email'),
-    ('on_profile', 'On profile update'),
-    ('on_cleaned', 'On cleaned'),
-    ('on_campaign', 'On campaign'),
+    ('on_subscribe', 'on_subscribe'),
+    ('on_unsubscribe', 'on_unsubscribe'),
+    ('on_upemail', 'on_upemail'),
+    ('on_profile', 'on_profile'),
+    ('on_cleaned', 'on_cleaned'),
+    ('on_campaign', 'on_campaign'),
 )
 
 
@@ -1130,7 +1178,7 @@ class MailChimpEventAction(EventAction):
     '''
     def __init__(self, *args, **kwargs):
         super(MailChimpEventAction, self).__init__(*args, **kwargs)
-        self._meta.get_field('on_event')._choices = ACTION_EVENTS
+        self._meta.get_field('on_event').choices = ACTION_EVENTS
 
     model_object = models.ForeignKey(MailChimpList, on_delete=models.CASCADE)
 

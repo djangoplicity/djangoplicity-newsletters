@@ -125,8 +125,10 @@ def mailchimp_subscribe(list_pk=None, fired_at=None, params=None, ip=None,
         kwargs = mlist.parse_merge_fields(params['merges'])
         if obj:
             kwargs['model_identifier'], kwargs['pk'] = _object_identifier(obj)
+        else:
+            kwargs['email'] = email
 
-        for a in MailChimpEventAction.get_actions(list_pk, on_event='on_subscribed'):
+        for a in MailChimpEventAction.get_actions(list_pk, on_event='on_subscribe'):
             a.dispatch(**keys2str(kwargs))
 
 
@@ -146,11 +148,15 @@ def mailchimp_unsubscribe(list_pk=None, fired_at=None, params=None, ip=None,
 
     mlist = _get_list(list_pk)
     obj = mlist.get_object_from_mergefields(params['merges'])
-    kwargs = mlist.parse_merge_fields(params['merges'])
-    kwargs['model_identifier'], kwargs['pk'] = _object_identifier(obj)
+    if obj:
+        kwargs = mlist.parse_merge_fields(params['merges'])
+        kwargs['model_identifier'], kwargs['pk'] = _object_identifier(obj)
 
-    for a in MailChimpEventAction.get_actions(list_pk, on_event='on_unsubscribe'):
-        a.dispatch(**keys2str(kwargs))
+        for a in MailChimpEventAction.get_actions(list_pk, on_event='on_unsubscribe'):
+            a.dispatch(**keys2str(kwargs))
+    else:
+        model_identifier = params.get('merges', {}).get('DPID', '-')
+        logger.info('Contact matching query does not exist. id: %s ' % model_identifier)
 
 
 @task(name='mailinglists.mailchimp_cleaned', ignore_result=True)
@@ -232,11 +238,16 @@ def mailchimp_profile(list_pk=None, fired_at=None, params=None, ip=None,
 
     mlist = _get_list(list_pk)
     obj = mlist.get_object_from_mergefields(params['merges'])
-    kwargs = mlist.parse_merge_fields(params['merges'])
-    kwargs['model_identifier'], kwargs['pk'] = _object_identifier(obj)
+    if obj:
+        kwargs = mlist.parse_merge_fields(params['merges'])
+        kwargs['model_identifier'], kwargs['pk'] = _object_identifier(obj)
+        mlist.remove_mailchimp_groups_from_contact(obj)
 
-    for a in MailChimpEventAction.get_actions(list_pk, on_event='on_profile'):
-        a.dispatch(**keys2str(kwargs))
+        for a in MailChimpEventAction.get_actions(list_pk, on_event='on_profile'):
+            a.dispatch(**keys2str(kwargs))
+    else:
+        model_identifier = params.get('merges', {}).get('DPID', '-')
+        logger.info('Contact matching query does not exist. id: %s ' % model_identifier)
 
 
 @task(name='mailinglists.mailchimp_campaign', ignore_result=True)
