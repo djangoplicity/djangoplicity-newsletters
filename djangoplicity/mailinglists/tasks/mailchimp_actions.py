@@ -238,12 +238,12 @@ class MailChimpUpdateAction(MailChimpAction):
                     self.get_logger().info("Subscribed email address '%s' to MailChimp list %s" % (after, list.name))
                 elif self._is_email_valid(before) and self._is_email_valid(after) == False:
                     # Unsubscribe email, since new email is empty or invalid
-                    list.unsubscribe(before, delete_member=conf['delete_member'], send_goodbye=conf['send_goodbye'], async=False)
+                    list.unsubscribe(before, delete_member=conf['delete_member'], send_goodbye=conf['send_goodbye'], is_async=False)
                     self.get_logger().info("Unsubscribed email address '%s' from MailChimp list %s" % (before, list.name))
                 elif self._is_email_valid(before) and self._is_email_valid(after):
                     # Updated email address of subscriber
                     merge_fields = list.create_merge_fields(obj, changes=changes)
-                    list.update_profile(before, after, merge_fields=merge_fields, async=False)
+                    list.update_profile(before, after, merge_fields=merge_fields, is_async=False)
                     self.get_logger().info("Changed email address from '%s' to '%s' on MailChimp list %s" % (before, after, list.name))
                 else:
                     # before and after emails aren't a valid
@@ -252,7 +252,7 @@ class MailChimpUpdateAction(MailChimpAction):
                 if self._is_email_valid(before):
                     # if email is valid and was not updated - other parts was changed
                     merge_fields = list.create_merge_fields(obj, changes=changes)
-                    list.update_profile(obj.email, obj.email, merge_fields=merge_fields, async=False)
+                    list.update_profile(obj.email, obj.email, merge_fields=merge_fields, is_async=False)
                     self.get_logger().info("Updated profile of subscriber with email address '%s' on MailChimp list %s" % (obj.email, list.name))
                 else:
                     # Other fields was change but the subscriber wasn't a valid email
