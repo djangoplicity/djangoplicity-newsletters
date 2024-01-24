@@ -277,13 +277,19 @@ class NewsletterAdmin( dpadmin.DjangoplicityModelAdmin, NewsletterDisplaysAdmin,
 
     def send_newsletter_view( self, request, pk=None ):
         """
-        Send a newsletter right away.
+        Send a newsletter immediately if the embargo date has passed and the form is valid.
         """
         nl = get_object_or_404( Newsletter, pk=pk )
 
         if request.method == "POST":
             form = SendNewsletterForm( request.POST )
-            if form.is_valid():
+
+            # Check if the embargo has lifted
+            if not nl.is_embargo_lifted:
+                form.add_error('send_now', "The embargo date has not passed yet.")
+
+            # Check if the form xis valid
+            elif form.is_valid():
                 send_now = form.cleaned_data['send_now']
                 if send_now:
                     nl.send_now()
