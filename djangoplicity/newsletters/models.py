@@ -62,7 +62,7 @@ from django.contrib.sites.models import Site
 from django.db import models
 from django.db.models.signals import post_save
 from django.template import Context, Template, defaultfilters
-from django.utils import translation
+from django.utils import translation, timezone
 from django.utils.html import format_html
 from django.utils.timezone import is_naive, make_aware
 from django.utils.translation import ugettext as _
@@ -452,6 +452,12 @@ class Newsletter( ArchiveModel, TranslationModel ):
     editorial = models.TextField( blank=True )
     editorial_text = models.TextField( blank=True )
 
+    @property
+    def is_embargo_lifted(self):
+        if getattr(settings, 'NEWSLETTER_EMBARGO_CHECK_ENABLED', False):
+            return timezone.now() >= self.embargo_date
+        return True
+
     def _schedule(self, user_pk):
         if self.scheduled_status in ('ON', 'ONGOING'):
             raise Exception("Newsletter is scheduled for sending.")
@@ -590,7 +596,7 @@ class Newsletter( ArchiveModel, TranslationModel ):
         Note each mailer will render the newsletter, since subscription
         links etc might change depending on the mailer.
         """
-        if not self.send and self.scheduled_status == 'OFF':
+        if not self.send and self.scheduled_status == 'OFF' and self.is_embargo_lifted:
             send_newsletter.delay( self.pk )
 
     def send_test( self, emails ):

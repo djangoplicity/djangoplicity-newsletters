@@ -7,7 +7,7 @@
   <ul class="object-tools">
     {% block object-tools-items %}
     <li><a href="{% url 'admin_site:send_newsletter_test_view' original.pk %}" class="historylink">{% trans "Send test" %}</a></li>
-    {% if not original.send and original.scheduled_status == 'OFF' %}<li><a href="{% url 'admin_site:send_newsletter_view' original.pk %}" class="historylink">{% trans "Send now" %}</a></li>{% endif %}
+    {% if not original.send and original.scheduled_status == 'OFF' and original.is_embargo_lifted %}<li><a href="{% url 'admin_site:send_newsletter_view' original.pk %}" class="historylink">{% trans "Send now" %}</a></li>{% endif %}
     {% if not original.send and original.scheduled_status == 'OFF' %}<li><a href="{% url 'admin_site:schedule_newsletter_view' original.pk %}" class="historylink">{% trans "Schedule" %}</a></li>{% endif %}
     {% if not original.send and original.scheduled_status != 'OFF' %}<li><a href="{% url 'admin_site:unschedule_newsletter_view' original.pk %}" class="historylink">{% trans "Cancel schedule" %}</a></li>{% endif %}
     <li><a href="{% url 'admin_site:html_newsletter_view' original.pk %}" class="historylink">{% trans "View HTML" %}</a></li>
