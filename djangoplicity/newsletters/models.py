@@ -454,9 +454,12 @@ class Newsletter( ArchiveModel, TranslationModel ):
 
     @property
     def is_embargo_lifted(self):
-        if getattr(settings, 'NEWSLETTER_EMBARGO_CHECK_ENABLED', False):
-            return timezone.now() >= self.embargo_date
-        return True
+        try:
+            if getattr(settings, 'NEWSLETTER_EMBARGO_CHECK_ENABLED', False):
+                return timezone.now() >= self.release_date
+            return True
+        except AttributeError:
+            return True
 
     def _schedule(self, user_pk):
         if self.scheduled_status in ('ON', 'ONGOING'):
