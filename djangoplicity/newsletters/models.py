@@ -128,6 +128,11 @@ class Mailer( models.Model ):
         super( Mailer, self ).__init__( *args, **kwargs )
         self._meta.get_field( 'plugin' )._choices = Mailer.get_plugin_choices()  # lazy( Mailer.get_plugin_choices, list )
 
+    def clean_fields(self, exclude=None):
+        # We exclude the plugin field validation because we add the choices dynamically, otherwise admin would disallow any option
+        exclude = ['plugin']
+        super().clean_fields(exclude=exclude)
+
     def get_plugincls( self ):
         """
         Get the mailer plug-in class for this mailer.
@@ -218,7 +223,7 @@ class Mailer( models.Model ):
         """
         Get list of mailer plug-in choices
         """
-        choices = [ ( p, pcls.name ) for p, pcls in list(cls._plugins.items()) ]
+        choices = [ ( p, pcls.name + "(" + str(p) + ")" ) for p, pcls in list(cls._plugins.items()) ]
         choices.sort( key=lambda x: x[1] )
         return list( choices )
 

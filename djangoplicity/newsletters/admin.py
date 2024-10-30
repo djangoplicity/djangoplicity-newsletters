@@ -44,6 +44,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
+from django import forms
 import django
 if django.VERSION >= (2, 0):
     from django.urls import reverse
@@ -435,12 +436,22 @@ class DataSourceOrderingAdmin( admin.ModelAdmin ):
     list_filter = []
     search_fields = [ 'name', 'fields', ]
 
+class MailerAdminForm(forms.ModelForm):
+    class Meta:
+        model = Mailer
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(MailerAdminForm, self).__init__(*args, **kwargs)
+        self.fields['plugin'] = forms.ChoiceField(choices=Mailer.get_plugin_choices())
+
 
 class MailerAdmin( admin.ModelAdmin ):
     list_display = [ 'name', 'plugin' ]
     list_filter = ['plugin']
     search_fields = [ 'name', 'plugin', ]
     inlines = [ MailerParameterInlineAdmin ]
+    form = MailerAdminForm
 
 
 class MailerLogAdmin( admin.ModelAdmin ):
