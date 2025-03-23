@@ -1,4 +1,4 @@
-Django==1.11.29
+Django==2.2.24
 setuptools
 certifi
 django-mailman == 0.4+eso1
