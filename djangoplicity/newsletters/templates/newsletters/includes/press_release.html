@@ -1,8 +1,9 @@
-{% load i18n %}
+{% load i18n newsletter_tags %}
 {% if release %}{% load release_links djangoplicity_datetime djangoplicity_utils  %}
 {% if embargo %}
 <div style="padding: 10px; font-size: 18px; background-color: #f4c819; text-align: center; font-weight: bold;">
-{% trans "EMBARGOED* UNTIL"%} {{release.release_date|time4lang:"en"|datetime:"DATETIME" }}
+{% trans "EMBARGOED* UNTIL"%} <br>
+{{ release.release_date|dual_timezone_display }}
 </div>
 <div style="padding: 10px; font-size: 12px; background-color: #eeeeee;">
 {% endif %}
