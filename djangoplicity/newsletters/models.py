@@ -701,8 +701,7 @@ class Newsletter( ArchiveModel, TranslationModel ):
         if store:
             self.html = data['html']
             self.text = data['text']
-            if not self.subject:
-                self.subject = data['subject']
+            self.subject = data['subject']
 
         return data
 
